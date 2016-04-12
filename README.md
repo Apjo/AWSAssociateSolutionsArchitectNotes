@@ -1,4 +1,4 @@
-# AWSAssociateSolutionsArchitectNotes
+# AWS Associate Solutions Architect Exam Notes
 These are the notes I have prepared while doing the online course for AWS Associate Solutions Architect on Udemy(between 2015-2016) by [Ryan Kroonenburg] (https://www.udemy.com/user/ryankroonenburg/).
 I use these notes whenever I forget or want to revise any concept of AWS, I strongly suggest anyone wanting to know/study about AWS be sure to check out the courses offered by Ryan on Udemy by navigating to the above link.
 
