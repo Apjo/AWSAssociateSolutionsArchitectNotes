@@ -109,12 +109,63 @@ A content delivery network (CDN) is a system of distributed servers (network) th
     
     After AWS resources are deployed we can update or modify in a controlled manner and predictable way in effect applying version control to your AWS infrastructure.
 
-# Quiz1
-    1.  Which section describes best the availability zones: distinct locations from within an AWS region that are engineered to be isolated from failures.
-    2.  what does a AWS region consists of? an independent collection of AWS computing resources in a defined geography
-    3.  AWS NoSQL product offering is known as dynamodb (Please Use One Word).
-    3.  In what year did Amazon move Amazon.com to AWS? 2010
-    4.  What is the difference between Elastic Beanstalk & CloudFormation? Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring based on the code you upload to it, whereas CloudFormation is an automated provisioning engine designed to deploy entire cloud environments via a JSON script.
-    5.  What new compute service was recently announced at the AWS Re-Invent summit in 2014? Lambda
-    6.  Amazon's highly scalable DNS service is known as: Route53
 
+#  IAM(Identity and Access Management)
+Allows us to manage users and their level of access to the AWS console.
+
+**Features of IAM**:
+
+-   Centralized control of your AWS account
+-   Integrated with existing active directory account and allows single sign on
+-   Has fine grained access to the AWS resource
+-   Access available on user/group/roles
+-   Allows Multifactor authentication
+-   Provides temporary access for users,and devices and services where necessary
+-   Allows us to set up password rotation policy
+
+**High Level Concept**:
+
+- User - end user
+- Group - a collection of users under one set of permissions
+- Roles-similar to a group,but you can assign both users and AWS resources(EC2).EC2 instances have credentials stored on them,however it is a security risk and difficult to manage.Roles solve this issue.For example, an EC2 instance can have a S3 role assigned to it,and the S3 role would allow any person or any object that is assigned to it to access S3.
+
+**Each Role has a policy template**.
+
+- Administrator Access - full access to AWS services and resources.
+-   Power User Access - full access except for management of users and groups.
+-   Read Only Access - read only access to the resources
+
+more granular access depending on the resources required such as S3 access.
+
+**Configure IAM**:
+
+-   Multifactor authentication: Is simply where you have a second means to verify yourself when signing in. Since passwords can be compromised, with multi factor authentication is basically a second way of authenticating you.
+
+**Creating a role**: To allow our EC2 instances to access our S3 resources.
+
+-   Role Name: S3_Access
+-   Roles selected: Amazon Ec2: Allows EC2 instances to call AWS services on your behalf.
+-   Given a full S3_Access role.
+-   Role ARN arn:aws:iam::535754833757:role/S3_Access
+
+**Trusted Entities**: The identity provider(s) ec2.amazonaws.com
+
+-   Policies arn:aws:iam::aws:policy/AmazonS3FullAccess
+-   ARN:Amazon Resource Name- unique name within the amazon to describe that role.
+
+
+# Active Directory Integration:
+### How is it done?
+Imagine a user is at home, and he wants to login to the AWS console, and they are working on their own home network. So they haven’t already signed-in into the work network.
+What they(users) would do is to browse to a URL, for eg: /ADFS/LS/IDPInitiatedSignOn, and this is basically an ADFS server that sits inside a DMZ inside someone’s corporate network. You browse to that link and it would give you a user name and password depending on your browser, but basically it prompts you to sign in using your active directory credentials. It is also known as Single-Sign On or SSO 
+We type our SSO in there and sign into active directory environment. When we perform this step we receive a SAML assertion.
+SAML basically stands for **Security Assertion Mark-Up Language**. SAML assertions is in the form of an authentication response from the ADFS. We receive a cookie that is stored inside our browser that says that you are signed on.
+Our browser then points to the SAML assertion to the AWS sign on endpoint for SAML. Behind the scenes the sign-in users assume the role with SAML API to request temporary security credentials and then constructs a sign-in URL for the AWS management console. This will login to the AWS Web console. 
+
+-  Can you authenticate with Active Directory:yes, using SAML authentication
+-  Whether or not you are authenticating to active directory first and then given a security credential or if you get the temporary security credential first, which is then authenticated against the active directory? you always authenticate against active directory first and then you would be assigned the temporary security credential
+
+### IAM Summary:
+-   IAM is the management console for managing access to AWS resources for an org
+-   IAM consists of users, groups, and roles
+-   A user is an individual, groups are collection of users with one set of permissions, roles can be applied to both users and AWS services (such as Lambda,EC2 etc)
