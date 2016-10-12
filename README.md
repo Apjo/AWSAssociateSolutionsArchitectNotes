@@ -344,7 +344,7 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Data Transfer pricing
 
 
-# CloudFront**:
+# CloudFront:
 
 - A CDN is a system of distributed servers (network) that deliver webpages and other web content to a user based on the geographic location of the user, the origin of the webpage and a content delivery server. 
 - CloudFront can be used to deliver your your entire website, including dynamic, static, streaming, and interactive content using a global network of edge locations. 
@@ -364,15 +364,27 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 
 # Storage Gateway:
 
-This is a service that connects an on-premises software appliance with cloud-based storage to provide seamless and secure integration between an org’s on premises IT environment and AWS’s storage infrastructure. The service enables you to securely store data to the AWS cloud for scalable and cost-effective storage.
+This is a service that connects an on-premises software appliance with cloud-based storage to provide seamless and secure integration between an org’s on premises IT environment and AWS’s storage infrastructure. 
+The service enables you to securely store data to the AWS cloud for scalable and cost-effective storage.
 Available for download as a VM that you install as a host in your datacenter
-Once installed and associated with your AWS account through the activation process, you can use the AWS console to create the storage gateway option that is right for you
+Once installed and associated with your AWS account through the activation process, you can use the AWS console to create the storage gateway option that is right for you, i.e. gateway-cached
+or gateway-stored volumes that can be mounted as iSCSI devices by your on-premise applications
+4 pricing components: gateway usage(per gateway/month), snapshot storage(per GB/month), volume storage usage(per GB/month), data tranfer out(per GB/month)
+ 
 
 **Types of Storage gateways**:
 
-- Gateway Stored Volumes: We keep our entire dataset on site. Storage Gateway then backs up asynchronously to S3. Gateway-Stored volumes are inexpensive and durable backup providers that you can recover locally or from Amazon EC2
-- Gateway Cached Volumes: Only your most frequently accessed data is stored locally. Your entire dataset is stored in S3. You don’t have to buy SAN arrays for your office/data center, so you get significant cost savings. If you lose the internet connectivity you will not be able to access all of your data
+- Gateway Stored Volumes: Store your primary data locally, while asynchronously backing up to S3 in the form of EBS snapshots. 
+  Gateway-Stored volumes are inexpensive and durable backup providers that you can recover locally or from Amazon EC2, low latency access to datasets, 
+  
+- Gateway Cached Volumes: Only your most frequently accessed data is stored locally. 
+  Your entire dataset is stored in S3 while retaining some portion of it locally in a cache for frequently accessed data
+  These volumes minimize the need to scale your on-premise storage infrastructure, while providing your app with low-latency access to frequently accessed data 
+  You don’t have to buy SAN arrays for your office/data center, so you get significant cost savings. 
+  If you lose the internet connectivity you will not be able to access all of your data
+  
 - Gateway Virtual Tape Library(VTL):  Have a limitless collection of virtual tapes. Each virtual tape can be stored in a  Virtual Tape library backed by Amazon S3 or a Virtual tape shelf backed by Amazon Glacier. The VTL exposes an industry standard iSCSI interface which provides your backup application with online access to the virtual tapes
+
 
 
 # Import/Export:
@@ -382,7 +394,10 @@ Once installed and associated with your AWS account through the activation proce
 - Import/Export Disk: 
     Accelerates moving large amount of data into and out of the AWS cloud using portable storage devices for transport.
     It transfers your data directly and off of storage devices using Amazon’s high-speed internal network and bypassing the internet. 
+    Faster than the internet transfer and more cost effective than upgrading your connectivity
     Allows to import to EBS, S3, Glacier, export from S3
+    you pay only for what you use. 
+    3 pricing components: per device fee, a data load time charge, possible return shipping charges, or shipping to destinations not local to AWS
     
 - Snowball: 
     This is a petabyte scale data transport solution that uses secure appliances to transfer large amounts of data into and out of AWS. 
@@ -740,4 +755,103 @@ However you can copy AMI’s to other regions using the console, command line or
 - Read After Write consistency
 
 # What is Lambda?
-Read definition above
+  Please read the definition for `Lambda` above
+
+# Building a Fault-Tolerant website
+
+## Setting up environment:
+1. IAM Role for S3Role for S3 Full access
+2. VPC will contain 2 security groups one will be a WebDMZ, and the second one will be a RDS one
+3. 2 S3 buckets, named `wordpresscode2016aniketacloudguru`, and `wordpressmedia2016aniketacloudguru` and CDN's were configured for both of them
+4. 1 CDN for `wordpressmedia2016aniketacloudguru`
+5. RDS instance, non-publicly accessible, and non-multiAZ , since I wanted this to be free
+6. 1 ELB with the Web-DMZ security group
+7. No Route 53 record(optional)
+8. set up a EC2 instance, installed wordpress on it, uploaded the code to S3. Link to blog: [WordPress](http://54.187.100.238/index.php/2016/08/27/welcome-to-aws-learnings/)
+
+## Automation and setting up AMI
+
+# Advantages of Cloud
+- Trade capital expense for variable expense
+- benefit from massive economies of scale
+- stop guessing about capacity
+- increase speed and agility
+- stop spending money running and maintaining data
+- go global in minutes
+
+# Overview of Security Processes
+- *Shared responsibility model*: AWS is responsible for Global Infrastructure but you are responsible for anything you put on the cloud
+- *IAAS*: Amazon EC2, S3, and Amazon VPC are under your control. 
+- *Managed services*: AWS is responsible for patching, antivirus etc. But you are responsible for account management and user access. 
+- *Storage decommissioning*: When a storage device has reached its end of useful life, Amazon will de-commission the resource to not expose consumer data
+- *Network Security*: You can connect to any AWS access point via HTTP using SSL, amazon also offers VPC which provides a private subnet within the AWS cloud
+- *Amazon Corporate segregation*: Logically, the AWS production network is segregated from the Amazon Corporate network by means of a complex set of network security/segregation device
+- will not permit IPSpoofing must request a vulnerability scans
+- *AWS Trusted Advisor*: Inspects your AWS environment and makes recommendations when opportunities may exist to save money, improve system performance, or close security gaps.
+- *Instance Isolation*: Different instances running on the same physical machine are isolated from each other via Xen hypervisor, AWS firewall resides between the virtual interface and 
+the physical network interface. The instances can be treated as if they are on separate physical hosts, and neighbors have no access to that instance other than any other host
+on the internet.
+- *Guest OS*: You have full root access over accounts, services, and applications, virtual instances controlled by you, AWS does not have access rights. As also provides 
+the ability to encrypt EBS volumes and their snapshots with AES-256
+- *Firewall*: Amazon EC2 provides a complete firewall solution; configured to be in a deny-all mode, customers must explicitly open the ports to allow inbound traffic
+- *Elastic Load Balancing*: SSL termination supported, allows you to identify the IP addresses of a client connecting to your servers.
+- *Direct Connect*: Bypass ISPs in your network path. 
+
+# AWS Risk and Compliance
+- AWS has a strategic business plan which includes risk identification and the implementation of controls to mitigate or manage risks
+- customers can request permission to conduct scans of their cloud infrastructure as long as they are limited to the customer's instances and do not violate
+ the AWS acceptable policy
+ 
+# Architecting for the AWS Cloud: Benefits
+- almost zero upfront infrastructure development
+- just-in-time infrastructure
+- more efficient resource utilization
+- usage-based costing
+- reduced time to market
+
+## Technical benefits of Cloud
+- automation - scriptable infrastructure
+- auto-scaling
+- proactive scaling
+- more efficient development lifecycle
+- improved testability
+- disaster recovery and business continuity
+- overflow traffic to the cloud
+
+- Be a pessimist when designing architectures in the cloud; assume things will fail. In other words, always design, implement and deploy for automated recovery from 
+failure
+
+- Decouple your components: build components that do not have tight dependencies on each other, so that one component dies/sleeps/busy then other components in the system
+ are built so as to continue to work as if no failure is happening. Loose coupling isolates the various layers and components of your application so that each component
+ interacts asynchronously with the others
+
+- Implement elasticity: can be implemented in 3 ways
+   1. proactive cyclic scaling: periodic scaling that occurs at fixed interval
+   2. proactive even scaling: scaling when you are expecting big surge of traffic requests due to a scheduled business event
+   3. Auto-scaling based on demand: using monitoring service, your system can send triggers to take appropriate actions
+
+- secure your application   
+
+# Consolidated Billing
+   We have a paying account, and this account is linked to separate AWS accounts such as test/dev, production and bank office accounts respectively.
+   Paying account is independent. It cannot access resources of other accounts. All linked accounts are independent. 
+   There is a limit of 20 linked accounts for consolidated billing
+
+## Advantages:
+- one bill per AWS account
+- very easy to track charges and allocate costs
+- volume pricing discount
+
+# Resource Groups and Tagging
+
+## Tags
+- key value pairs attached to AWS resources
+- metadata
+- they can be inherited
+
+## Resource Groups
+- makes it easy to group your resources using the tags assigned to them. You can group resources that share one or more tags
+- they contain information such as: region, name, HealthChecks
+
+# VPC Peering
+- a simple connection between 2 VPCs that enables us to route traffic between them using private IPs
