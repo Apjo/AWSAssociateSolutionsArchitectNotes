@@ -33,6 +33,7 @@ Following are the sequence of events:
 
 ### Table of Contents
 * [Concepts and Components](#concepts_introduction)
+* [IAM](#i_am)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -169,10 +170,8 @@ Following are the sequence of events:
         3. AppStream: Streaming desktop applications to your users.     
         
         4. SWF(Simple Work Flow Service): Helps developers to build, run, and scale background jobs that have parallel 
-            or sequential steps. We can think of this as a fully-managed state-tracker and task coordinator in the cloud. 
-            Tasks can be carried out by application or human workers.
+            or sequential steps.
         
-        5. 
         6. Elastic Transcoder: A media transcoding service in the cloud. Designed to be highly-scalable, easy to use in a 
             cost-effective way for developers and businesses to convert or transcode media files from their source formats 
             to version that will play on devices like smartphones, tablets etc.
@@ -243,32 +242,35 @@ Following are the sequence of events:
         3. SES(Simple Email Service): A cost-effective outbound only email sending service. 
             We can send transactional emails,marketing messages etc, and get to pay for what we use. 
             Along with high-deliverability SES provides, easy, real-time access to your sending statistics, 
-            and built-in notifications for bounces, complaints, and deliveries to help you find tune your cloud-based email sending strategy
+            and built-in notifications for bounces, complaints, and deliveries to help you find tune your 
+            cloud-based email sending strategy
                                  
-   After AWS resources are deployed we can update or modify in a controlled manner and predictable way in effect applying version control to your AWS infrastructure.
+   After AWS resources are deployed we can update or modify in a controlled manner,
+   and predictable way in effect applying version control to your AWS infrastructure.
 
 <a name ="i_am"></a>
 #  IAM(Identity and Access Management)
 Allows us to manage users and their level of access to the AWS console.
 
 **Features of IAM**:
-
--  Centralized control of your AWS account
--  Integrated with existing active directory account and allows single sign on
--  Has fine grained access to the AWS resource
--  Access available on user/group/roles
--  Allows Multifactor authentication
--  Provides temporary access for users,and devices and services where necessary
--  Allows us to set up password rotation policy
+- Centralized control of your AWS account
+- Integrated with existing active directory account and allows single sign on
+- Has fine grained access to the AWS resource
+- Access available on user/group/roles
+- Allows Multifactor authentication
+- Provides temporary access for users,and devices and services where necessary
+- Allows us to set up password rotation policy
+- Integrates with many other aws services
+- supports compliance
+- A universally available service, not restricted to a particular region
 
 **High Level Concept**:
-
 - User: An end user
 - Group: A collection of users under one set of permissions
-- Roles: Similar to a group, but you can assign both users and AWS resources(EC2).EC2 instances have credentials stored on them,however it is a security risk and difficult to manage.Roles solve this issue.For example, an EC2 instance can have a S3 role assigned to it,and the S3 role would allow any person or any object that is assigned to it to access S3.
+- Roles: Similar to a group, but you can assign both users and AWS resources(EC2).
+- Policies: document defining 1 or more permissions
 
 **Each Role has a policy template**.
-
 - Administrator Access: Full access to AWS services and resources
 - Power User Access:    Full access except for management of users and groups
 - Read Only Access:     Read only access to the resources
@@ -276,22 +278,29 @@ Allows us to manage users and their level of access to the AWS console.
 More granular access depending on the resources required such as S3 access.
 
 **Configure IAM**:
-
-- Multifactor authentication: Is simply where you have a second means to verify yourself when signing in. Since passwords can be compromised, with multi factor authentication is basically a second way of authenticating you.
+- root account gives you unlimited access to do things in the cloud
+- Multifactor authentication: Is simply where you have a second means to verify yourself when signing in.
+Since passwords can be compromised, with multi factor authentication is basically a second way of authenticating you.
 
 **Creating a role**: 
-To allow our EC2 instances to access our S3 resources.
+A secure way to grant permissions to entities that you trust
+Eg:
+- IAM users in another account
+- Application code running on EC2 instances needs access to other AWS services
 
-- Role Name: S3_Access
-- Roles selected: Amazon Ec2: Allows EC2 instances to call AWS services on your behalf.
-- Given a full S3_Access role.
-- Role ARN arn:aws:iam::535754833757:role/S3_Access
-
-**Trusted Entities**: The identity provider(s) ec2.amazonaws.com
-
--  Policies arn:aws:iam::aws:policy/AmazonS3FullAccess
--  ARN:Amazon Resource Name- unique name within the amazon to describe that role.
-
+**Summary**:
+IAM consists of the following:
+- Users
+- Groups(group users and apply policies to them)
+- Roles
+- Policy documents
+- Root account has complete admin access when you first set up your AWS account
+- IAM does not apply to any region at this time
+- New users have no permissions, they have AccessKeyId, and secret access keys when they are first created
+- Access key ids and secret keys cannot be used as passwords to login to the console, we use them to access AWS via API or CLI
+- Set up MFA on root account, always
+- create and customize your own password rotation policies
+- power user access allows access to all AWS resources except for mgmt of groups and users within IAM
 
 # Active Directory Integration:
 ### How is it done?
