@@ -307,59 +307,76 @@ IAM consists of the following:
 Imagine a user is at home, and he wants to login to the AWS console, and they are working on their own home network
 So they haven’t already signed-in into the work network.
 
-What they(users) would do is to browse to a URL, for eg: /ADFS/LS/IDPInitiatedSignOn, and this is basically an ADFS server that sits inside a DMZ inside someone’s corporate network. 
-You browse to that link and it would give you a user name and password depending on your browser, but basically it prompts you to sign in using your active directory credentials. 
+What they(users) would do is to browse to a URL, for eg: /ADFS/LS/IDPInitiatedSignOn, 
+and this is basically an ADFS server that sits inside a DMZ inside someone’s corporate network. 
+You browse to that link and it would give you a user name and password depending on your browser,
+but basically it prompts you to sign in using your active directory credentials. 
 It is also known as Single-Sign On or SSO
  
--  We type our SSO in there and sign into active directory environment. When we perform this step we receive a SAML assertion.
--  SAML basically stands for **Security Assertion Mark-Up Language**. SAML assertions is in the form of an authentication response from the ADFS. 
--  We receive a cookie that is stored inside our browser that says that you are signed on.
--  Our browser then points to the SAML assertion to the AWS sign on endpoint for SAML. 
--  Behind the scenes the sign-in users assume the role with SAML API to request temporary security credentials and then constructs a sign-in URL for the AWS management console. 
--  This will login to the AWS Web console. 
+- We type our SSO in there and sign into active directory environment. When we perform this step we receive a SAML assertion.
+- SAML basically stands for **Security Assertion Mark-Up Language**.
+  SAML assertions is in the form of an authentication response from the ADFS. 
+- We receive a cookie that is stored inside our browser that says that you are signed on.
+- Our browser then points to the SAML assertion to the AWS sign on endpoint for SAML. 
+- Behind the scenes the sign-in users assume the role with SAML API to request temporary security credentials,
+  and then constructs a sign-in URL for the AWS management console. 
+- This will login to the AWS Web console. 
 
 **Questions**:
 Can you authenticate with Active Directory: Yes, using SAML authentication
-Whether or not you are authenticating to active directory first and then given a security credential or if you get the temporary security credential first, which is then authenticated against the active directory? you always authenticate against active directory first and then you would be assigned the temporary security credential
-
-### IAM Summary:
--  IAM is the management console for managing access to AWS resources for an org
--  IAM consists of users, groups, and roles
--  A user is an individual, groups are collection of users with one set of permissions, roles can be applied to both users and AWS services (such as Lambda,EC2 etc)
+A: Whether or not you are authenticating to active directory first and then given a security credential or,
+if you get the temporary security credential first, which is then authenticated against the active directory?
+A: You always authenticate against active directory first and then you would be assigned the temporary security credential
 
 ### AWS Object Storage and CDN - S3, Glacier and CloudFront
 
 **S3**:
-S3 provides developers and IT teams with highly scalable, durable, secure object storage. 
+S3(Simple Storage Service) provides developers and IT teams with highly scalable, durable, secure object storage. 
 Amazon S3 is easy to use, with a simple web service interface to store and retrieve any amount of data from anywhere on the web.
 
 **S3 Essentials**:
 
-    1.  S3 is object based i.e. it allows you to store, and upload files on the platform. Cannot install OS or databases on S3
-    2.  Files can be from 1 byte to 5tb in size
-    3.  There is unlimited storage 
-    4.  Files are stored in buckets(any directory like we have on Windows or Linux files system)
-    5.  Buckets have a unique namespace for each given region. For example, if we wanted to create a bucket called acloudguru the EU west region then that namespace name would be reserved so someone else using another Amazon account could not create a acloudguru bucket eg: https://s3-us-west2.amazonaws.com/acloudguru
-    6.  Amazon guarantees 99.99% availability or the S3 platform.S3 buckets are essentially spread across availability zones, so if the availability zone goes down the S3 bucket is stored in the other availability zones, and Amazon does this automatically we do not need to configure this
-    7.  Amazon also guarantees 99.999999999% durability for S3 information.Durability is simply, if you think of storing a file on a disc set that’s a RAID 1 and you lose one of the discs, since we are in the RAID 1 configuration which is a mirror, all your information is stored across 2 disks, so you can afford the loss of 1 disc. The way Amazon structures S3 is that if we store 10,000 files that will guarantee that those 10,000 files will stay there with above guarantee %age of durability
-    8.  S3 can have metadata(key value pairs) on each file
-    9.  S3 allows you to do lifecycle management as well as versioning
-    10. S3 also allows you to encrypt your buckets, so you can store your files and encrypted at rest
+    1. S3 is object based i.e. it allows you to store, and upload files on the platform. Cannot install OS or databases on S3
+    2. Files can be from 1 byte to 5tb in size
+    3. There is unlimited storage 
+    4. Files are stored in buckets(any directory like we have on Windows or Linux files system)
+    5. Buckets have a unique namespace for each given region, that is, names must be uniqe globally
+    6. S3 being object based, objects consists of the key(name of the object), and value(data, made of sequence of bytes), and 
+       VersionId(versioning), metadata(data about data), subresources(ACLs), and torrent 
+    7. Built for 99.99% availability on S3 platform. Amazon guarantees 99.9% availability or the S3 platform. 
+    8. Amazon also guarantees 99.999999999% durability for S3 information.
+        Durability is simply, if you think of storing a file on a disc set that’s a RAID 1 and you lose one of the discs,
+        since we are in the RAID 1 configuration which is a mirror, all your information is stored across 2 disks, 
+        so you can afford the loss of 1 disc. The way Amazon structures S3 is that if we store 10,000 files 
+        that will guarantee that those 10,000 files will stay there with above guarantee %age of durability
+    10. S3 allows you to do lifecycle management as well as tiered storage options
+    11. S3 also allows you to encrypt your buckets
 
+**Data Consistency model for for S3**:
+- Read after write consistency for PUTS on new objects
+- eventual consistency for overwrite PUTS and DELETES, i.e. if you update an object or delete an object it will take some time
+    for that to be consistent across different facilities or inside S3 bucket
+     
+**S3 storage tiers and classes**:
+- _Standard S3 storage_: 99.99% availability, and 99.999999999% durability
+- _S3 - IA(Infrequently accessed)_: data that is accessed less frequently, but requires rapid access when needed, lower fee
+    than S3, but charged on retrieval
+- _Reduced Redundancy Storage(RRS)_: still has 99.99% availability but only 99.99% durability over a given year 
+    So, basically it is a little bit cheaper to Reduced Redundancy storage,
+    but you only want to store files on them that are not important if you lose them.
+    Only use Reduced Redundancy storage for replaceable data,so for example if you store 10,000 files so you could expect 
+    to lose 100 files over a year as opposed to 0.0001 file with standard storage.
+- _Glacier_: An extremely low-cost storage service for data archival. 
+    Amazon Glacier stores data for as little as $0.01 per gigabyte per month,
+    and is optimized for data that is infrequently accessed and for which retrieval times of 3-5 hours are suitable
 
-**Storage Types**:
-
-- Standard S3 storage: 99.99% availability, and 99.999999999% durability
-- Reduced Redundancy Storage(RRS): still has 99.99% availability but only 99.99% durability over a given year 
-    So, basically it is a little bit cheaper to Reduced Redundancy storage, but you only want to store files on them that are not important if you lose them. Only use Reduced Redundancy storage for replaceable data,so for example f you store 10,000 files so you could expect to lose 100 files over a year as opposed to 0.0001 file with standard storage.
-
-**Glacier**:
-
-- An extremely low-cost storage service for data archival. Amazon Glacier stores data for as little as $0.01 per gigabyte per month, and is optimized for data that is infrequently accessed and for which retrieval times of 3-5 hours are suitable
-- Glacier is basically data archiving. So, in traditional organizations you might archive off to tape, and you might do this because in some countries, companies that are regulated by Financial Services Authority, have to store their data for seven years 
-- You want to archive off to tapes and put the tapes into a safe location, and then forget about them. After 7 years you can destroy the data
-    So Amazon gives us this data archival as a service. We can do away with tapes entirely,we can archive anything that is in our S3 buckets directly to Glacier 
-
+**S3 Charges**:
+- storage: the more the storage you use, the cheaper it becomes
+- requests: # of requests
+- Storage management pricing - add tags while storing data in S3, and allows you to control costs, charged on per tag basis
+- Data Transfer pricing: Data coming in is free, data moving around, replication is charged
+- transfer acceleration: fast, easy, and secure transfer of files over long distances between your end users and an S3 bucket
+    
 **S3 Versioning**:
 
 - Stores all the versions of an object(including all writes and even if you delete and object). 
@@ -380,11 +397,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - transition to the Standard: Infrequent Access Storage class(128kb and 30 days after the creation date)
 
 **S3 Encryption**:
-
 - In Transit: You can upload/download your data to S3 via SSL Encrypted end points and S3 can automatically encrypt your data at rest.
- 
 - At Rest:
- 
     - Server side encryption
     - S3 managed keys- SSE-S3
     - AWS KEy Management service, managed keys SSE-KMS
@@ -392,7 +406,6 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - Client Side Encryption
 
 **S3 Security**:
-
 - All buckets are PRIVATE by default. That means, if you were to type in the buckets publicly accessible URL address, and it’s not a publicly available bucket, you wouldn’t be able to access object within that bucket. You would have actually go in and make that bucket public 
 - Allows Access Control Lists (an individual user can only have access to 1 bucket and have read only access)
 - Integrates with IAM using roles,for example allows EC2 users to have access to S3 buckets by roles
@@ -409,40 +422,34 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - S3 is spread across multiple availability zones, and they guarantee Eventual consistency. All AZ’s will eventually be consistent. Put/Write/Delete requests will eventually be consistent across AZ’s
 
 **S3 use Cases**:
-
 - File shares for networks
 - Backup/archiving
 - Used as an origin for CloudFront’s Content Distribution Network 
 - Hosting static files
 - Hosting static websites
 
-
 **S3 Exam tips**:
-
+- Object based, only store files, not suitable to install an Operating System
+- Files are stored in buckets
+- Files can be 0 Bytes t0 5 TB
+- unique namespace
 - Read after Write consistency for PUTS of new objects
 - Eventual consistency overwrites for PUTS and DELETES
-- S3 is a simple key-value store, since it is Object based, objects consists of the following:
-    - key: simply the name of the object
-    - value: this is simply the data and is made of sequence of bytes
-    - versionId: important for versioning
-    - metadata: data about data
-    - subresources
-    - Access Control Lists
-- tiered storage available
-
-**S3 storage tiers and classes**:
-
-- IA: infrequently Accessed: for data that is accessed less frequently, but requires rapid access when needed. Lower fee than S3, but charged a retrieval fee.
-- Reduced Redundancy Storage
-- Glacier
-
-**S3 is charged for**:
-
-- storage: the more the storage you use, the cheaper it becomes
-- requests: # of requests
-- Data Transfer pricing
-
-
+- S3(durable, immediately available, frequently accessed)
+- S3-IA(durable, immediately available, infrequently accessed)
+- S3-Reduced Redundancy Storage(data that is easily reproducible)
+- Glacier- archived data, wait for 3-5 hours before accessing
+- Core fundamentals of S3 object:
+   - key(name), names are lexographically stored in order
+   - value(data)
+   - versionid
+   - metadata
+   - Subresources
+    - ACLs
+    - Torrent  
+- Successful uploads will generate a HTTP 200 status code
+- Read the S#3 FAQ manual before taking the exam!!!
+ 
 # CloudFront:
 
 - A CDN is a system of distributed servers (network) that deliver webpages and other web content to a user based on the geographic location of the user, the origin of the webpage and a content delivery server. 
