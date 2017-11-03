@@ -449,7 +449,20 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - Torrent  
 - Successful uploads will generate a HTTP 200 status code
 - Read the S#3 FAQ manual before taking the exam!!!
- 
+
+**S3 Lab Exam tips**:
+- buckets are a universal namespace
+- upload an object to S3 receive a HTTP 200 code
+- 3 different types of storage S3, S3-IA, S3 reduced redundancy storage
+- encryption: 
+  - client side encryption
+  - server side encryption
+   - server side encryption with Amazon S3 managed keys(SSE-S3)
+   - server side encryption with KMS(SSE-KMS)
+   - server side encryption with customer provided keys(SSE-C)
+- control access to buckets using either a bucket ACL or using bucket policies
+- **by DEFAULT buckets are PRIVATE & ALL OBJECTS stored inside them are PRIVATE**
+   
 # CloudFront:
 
 - A CDN is a system of distributed servers (network) that deliver webpages and other web content to a user based on the geographic location of the user, the origin of the webpage and a content delivery server. 
