@@ -34,6 +34,7 @@ Following are the sequence of events:
 ### Table of Contents
 * [Concepts and Components](#concepts_introduction)
 * [IAM](#i_am)
+* [S3](#s_3)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -329,7 +330,7 @@ if you get the temporary security credential first, which is then authenticated 
 A: You always authenticate against active directory first and then you would be assigned the temporary security credential
 
 ### AWS Object Storage and CDN - S3, Glacier and CloudFront
-
+<a name ="s_3"></a>
 **S3**:
 S3(Simple Storage Service) provides developers and IT teams with highly scalable, durable, secure object storage. 
 Amazon S3 is easy to use, with a simple web service interface to store and retrieve any amount of data from anywhere on the web.
@@ -342,7 +343,7 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     4. Files are stored in buckets(any directory like we have on Windows or Linux files system)
     5. Buckets have a unique namespace for each given region, that is, names must be uniqe globally
     6. S3 being object based, objects consists of the key(name of the object), and value(data, made of sequence of bytes), and 
-       VersionId(versioning), metadata(data about data), subresources(ACLs), and torrent 
+        VersionId(versioning), metadata(data about data), subresources(ACLs), and torrent 
     7. Built for 99.99% availability on S3 platform. Amazon guarantees 99.9% availability or the S3 platform. 
     8. Amazon also guarantees 99.999999999% durability for S3 information.
         Durability is simply, if you think of storing a file on a disc set that’s a RAID 1 and you lose one of the discs,
@@ -378,24 +379,39 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - transfer acceleration: fast, easy, and secure transfer of files over long distances between your end users and an S3 bucket
     
 **S3 Versioning**:
-
-- Stores all the versions of an object(including all writes and even if you delete and object). 
-    For example you might have a word file that says “Hello,World” ,and you have saved it to your S3 bucket,you might then go in and update that file with “hello”.Now,you have 2 versions of that file on your S3 bucket.
+- Stores all the versions of an object(including all writes and even if you delete and object).
+    For example you might have a word file that says “Hello,World”, and you have saved it to your S3 bucket,
+    you might then go in and update that file with “hello”. Now, you have 2 versions of that file on your S3 bucket.
 - Great backup tool, once enabled,versioning cannot be disabled but only suspended
 - Integrates with Lifecycle rules
-- Versioning’s MultiFactorAuthentication(MFA) Delete capability, which uses multi-factor authentication, can be used to provide an additional layer of security
-    Cross region Replication, requires versioning enabled on the source bucket
+- Versioning’s MultiFactorAuthentication(MFA) Delete capability, which uses multi-factor authentication,
+  can be used to provide an additional layer of security.
+- Cross region Replication, requires versioning enabled on the source bucket
+
+**S3 Versioning Exam Tips**:
+- Stores all versions of the object(all writes and deletes)
+- Great backup tool
+- Once enabled, versioning cannot be disabled
+- Integrates with lifecycle rules
+- Versioning's MFA delete capability, which uses multi-factor authentication, can be used to provide additional security
 
 **S3 Lifecycle management**:
-
-- can be used in conjunction with versioning
-- can be applied to current versions and previous versions.
+- Can be used in conjunction with versioning
+- Can be applied to current versions and previous versions.
 - Following actions are allowed in conjunction with or without versioning:
     - archive to Glacier storage class(30 days after IA, if relevant)
     - permanent delete
     - archive and permanent delete
     - transition to the Standard: Infrequent Access Storage class(128kb and 30 days after the creation date)
 
+**S3 Lifecycle management Exam tips**:    
+- Can be used with versioning
+- Can be applied to current and previous versions
+- Following actions can  now be done
+    - Transition to Standard-IA(128kb and 30 days after creation date)
+    - Archive to glacier storage class(30 days after IA)
+    - permanently delete
+      
 **S3 Encryption**:
 - In Transit: You can upload/download your data to S3 via SSL Encrypted end points and S3 can automatically encrypt your data at rest.
 - At Rest:
@@ -406,20 +422,24 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - Client Side Encryption
 
 **S3 Security**:
-- All buckets are PRIVATE by default. That means, if you were to type in the buckets publicly accessible URL address, and it’s not a publicly available bucket, you wouldn’t be able to access object within that bucket. You would have actually go in and make that bucket public 
+- All buckets are PRIVATE by default. That means, if you were to type in the buckets publicly accessible URL address,
+    and it’s not a publicly available bucket, you wouldn’t be able to access object within that bucket.
+    You would have actually go in and make that bucket public 
 - Allows Access Control Lists (an individual user can only have access to 1 bucket and have read only access)
 - Integrates with IAM using roles,for example allows EC2 users to have access to S3 buckets by roles
 - All endpoints are encrypted by SSL
-- S3 buckets can be configured to create access logs which log all the requests made to the S3 bucket. This can be done to another bucket
+- S3 buckets can be configured to create access logs which log all the requests made to the S3 bucket.
+  This can be done to another bucket
 
 **S3 Functionality**:
-
-- Static websites can be hosted on S3. No need for webservers, you can just upload a static `.html` file to an S3 bucket and take advantage of AWS S3’s durability and High Availability
+- Static websites can be hosted on S3. No need for webservers, you can just upload a static `.html` file to an S3 bucket and
+  take advantage of AWS S3’s durability and High Availability
 - Integrates with Cloud Front CDN,which is Amazon’s own Content Delivery Network
 - Multipart uploads, allows you to upload parts of a file concurrently
 - Suggested for files over 100MB.It is required for any files over 5GB
 - Allows us to resume a stopped file upload
-- S3 is spread across multiple availability zones, and they guarantee Eventual consistency. All AZ’s will eventually be consistent. Put/Write/Delete requests will eventually be consistent across AZ’s
+- S3 is spread across multiple availability zones, and they guarantee Eventual consistency.
+   All AZ’s will eventually be consistent. Put/Write/Delete requests will eventually be consistent across AZ’s
 
 **S3 use Cases**:
 - File shares for networks
@@ -428,7 +448,7 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Hosting static files
 - Hosting static websites
 
-**S3 Exam tips**:
+**S3-Exam tips**:
 - Object based, only store files, not suitable to install an Operating System
 - Files are stored in buckets
 - Files can be 0 Bytes t0 5 TB
@@ -450,7 +470,7 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Successful uploads will generate a HTTP 200 status code
 - Read the S#3 FAQ manual before taking the exam!!!
 
-**S3 Lab Exam tips**:
+**S3 Lab-Exam tips**:
 - buckets are a universal namespace
 - upload an object to S3 receive a HTTP 200 code
 - 3 different types of storage S3, S3-IA, S3 reduced redundancy storage
@@ -462,24 +482,49 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
    - server side encryption with customer provided keys(SSE-C)
 - control access to buckets using either a bucket ACL or using bucket policies
 - **by DEFAULT buckets are PRIVATE & ALL OBJECTS stored inside them are PRIVATE**
-   
-# CloudFront:
 
-- A CDN is a system of distributed servers (network) that deliver webpages and other web content to a user based on the geographic location of the user, the origin of the webpage and a content delivery server. 
-- CloudFront can be used to deliver your your entire website, including dynamic, static, streaming, and interactive content using a global network of edge locations. 
-- Requests for your content are automatically routed to the nearest edge location, so content is delivered with the best possible performance. 
+**Cross region replication for S3-Exam Tips**:
+- versioning must be enabled on both source and destination buckets
+- regions must be unique
+- files in an existing bucket are not replicated automatically. All subsequent updated files will be replicated automatically.
+- you cannot replicate to multiple buckets or use daisy chaining(at this time)
+- delete markers are replicated
+- deleting individual versions or delete markers will not be replicated
+
+# CloudFront:
+- A CDN is a system of distributed servers (network) that deliver webpages and other web content to a user
+   based on the geographic location of the user, the origin of the webpage and a content delivery server. 
+- CloudFront can be used to deliver your your entire website, including dynamic, static, streaming,
+   and interactive content using a global network of edge locations. 
+- Requests for your content are automatically routed to the nearest edge location,
+   so content is delivered with the best possible performance. 
 - Objects are cached for the life of the TTL(time to live). 
 - You can clear cached objects, but you will be charged.
-
+- Works well with S3, EC2, Route53, ELB, also works fine with non-aws origin server,
+  which stores original, definitive version of your file.
+  
 **Terminologies**:
 
-**Edge Location**: The location where the content will be cached, this is different from AWS Region/ AZ. Currently, 50 edge locations in the world. Edge location are not for READ only, you can write them too.
+**Edge Location**: The location where the content will be cached, this is different from AWS Region/ AZ.
+    Currently, 50 edge locations in the world.
 
-**Origin**: This is the origin of all the files that the CDN will distribute. This can be either an S3 bucket, an EC2 instance, or an ELB or Route53. This may not be registered with AWS you can have your own custom origin servers.
+**Origin**: This is the origin of all the files that the CDN will distribute.
+    This can be either an S3 bucket, an EC2 instance, or an ELB or Route53.
+    This may not be registered with AWS you can have your own custom origin servers.
 
 **Distribution**: Name given to the CDN which consists of a collection of Edge Locations
 
 **Web distribution**: Used for websites, RTMP: used for media streaming
+
+**CloudFront-Exam Tips**:
+- Edge location is where content will be cached. Edge location are not for READ only, you can write them too.
+- Origin is the origin of all the files that the CDN will distribute
+- Distribution is the name given the CDN which consists of a collection of Edge locations
+  - web distribution
+  - rtmp- media streaming
+- objects are cached for the life of ttl
+- if you clear the cached objects, you will be charged
+  
 
 # Storage Gateway:
 
