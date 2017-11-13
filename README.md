@@ -413,13 +413,14 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - permanently delete
       
 **S3 Encryption**:
-- In Transit: You can upload/download your data to S3 via SSL Encrypted end points and S3 can automatically encrypt your data at rest.
+- In Transit: 
+    You can upload/download your data to S3 via SSL Encrypted end points and S3 can automatically encrypt your data at rest.
 - At Rest:
-    - Server side encryption
-    - S3 managed keys- SSE-S3
-    - AWS KEy Management service, managed keys SSE-KMS
-    - Server side encryption with customer provided keys- SSE-C
-    - Client Side Encryption
+    - Server side encryption(SSE)
+     1) S3 managed keys- SSE-S3
+     2) AWS Key Management service, managed keys SSE-KMS
+     3) Server Side Encryption with Customer provided keys- SSE-C
+    - Client Side Encryption: you encrypt data on client side
 
 **S3 Security**:
 - All buckets are PRIVATE by default. That means, if you were to type in the buckets publicly accessible URL address,
@@ -471,25 +472,26 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Read the S#3 FAQ manual before taking the exam!!!
 
 **S3 Lab-Exam tips**:
-- buckets are a universal namespace
-- upload an object to S3 receive a HTTP 200 code
+- Buckets are a universal namespace
+- Upload an object to S3 receive a HTTP 200 code
 - 3 different types of storage S3, S3-IA, S3 reduced redundancy storage
-- encryption: 
+- Encryption: 
   - client side encryption
   - server side encryption
    - server side encryption with Amazon S3 managed keys(SSE-S3)
    - server side encryption with KMS(SSE-KMS)
    - server side encryption with customer provided keys(SSE-C)
-- control access to buckets using either a bucket ACL or using bucket policies
+- Control access to buckets using either a bucket ACL or using bucket policies
 - **by DEFAULT buckets are PRIVATE & ALL OBJECTS stored inside them are PRIVATE**
 
 **Cross region replication for S3-Exam Tips**:
-- versioning must be enabled on both source and destination buckets
-- regions must be unique
-- files in an existing bucket are not replicated automatically. All subsequent updated files will be replicated automatically.
-- you cannot replicate to multiple buckets or use daisy chaining(at this time)
-- delete markers are replicated
-- deleting individual versions or delete markers will not be replicated
+- Versioning must be enabled on both source and destination buckets
+- Regions must be unique
+- Files in an existing bucket are not replicated automatically.
+  All subsequent updated files will be replicated automatically.
+- You cannot replicate to multiple buckets or use daisy chaining(at this time)
+- Delete markers are replicated
+- Deleting individual versions or delete markers will not be replicated
 
 # CloudFront:
 - A CDN is a system of distributed servers (network) that deliver webpages and other web content to a user
@@ -525,31 +527,48 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - objects are cached for the life of ttl
 - if you clear the cached objects, you will be charged
   
-
 # Storage Gateway:
+- This is a service that connects an on-premises software appliance with cloud-based storage to provide seamless and
+  secure integration between the two. 
+- The service enables you to securely store data to the AWS cloud for scalable and cost-effective storage.
+- Available for download as a VM that you install as a host in your datacenter
+- Once installed and associated with your AWS account through the activation process,
+  you can use the AWS console to create the storage gateway option that is right for you, i.e. gateway-cached
+  or gateway-stored volumes that can be mounted as iSCSI devices by your on-premise applications
+- 4 pricing components: gateway usage(per gateway/month), snapshot storage(per GB/month), volume storage usage(per GB/month),
+  data transfer out(per GB/month)
+- 4 types:
+    - **File gateway(NFS)**: store flat files directly on S3, and accessed via NFS. Ownership, permissions,and timestamps
+       are durably stored in S3 in the user metadata of the object associated with the file.
+       They can be managed as native S3 objects
+    - **Volumes gateway(iSCSI)**: uses block based storage, would be able to run a OS
+       - **Gateway Stored Volumes/Stored volumes**: store entire size of data sets on sites or on premise, are inexpensive and
+         durable backup providers that you can recover locally or from Amazon EC2, low latency access to datasets.
+         Data written to your stored volumes is stored on your on-premise hardware. This data is asynchronously backed up to S3
+         in EBS snapshots 
+       - **Gateway Cached Volumes/Cached volumes**: store only most recently accessed data on your own premise
+         and rest is backed off in Amazon. Can create storage volumes upto 32TiB in size.
+         Your gateway stores data that you write to these volumes in S3, and retains recently read data in your on-premises 
+         storage gateway's cache and upload buffer storage. 1GB - 32TB in size for cached volumes
+    - **Gateway Virtual Tape Library/Tape gateway(VTL)**: backup and archiving solution.
+         Have a limitless collection of virtual tapes. Each virtual tape can be stored in a  Virtual Tape library backed by 
+         Amazon S3 or a Virtual tape shelf backed by Amazon Glacier. The VTL exposes an industry standard iSCSI interface
+         which provides your backup application with online access to the virtual tapes. Each tape gateway is preconfigured
+         with a media changer and tape drives, which are available to your existing client backup applications as iSCSI devices.
+         You add tape cartridges as you need to archive your data. Uses popular backup applications like NetBackup, Backup exec
+         Veeam etc.
 
-This is a service that connects an on-premises software appliance with cloud-based storage to provide seamless and secure integration between an org’s on premises IT environment and AWS’s storage infrastructure. 
-The service enables you to securely store data to the AWS cloud for scalable and cost-effective storage.
-Available for download as a VM that you install as a host in your datacenter
-Once installed and associated with your AWS account through the activation process, you can use the AWS console to create the storage gateway option that is right for you, i.e. gateway-cached
-or gateway-stored volumes that can be mounted as iSCSI devices by your on-premise applications
-4 pricing components: gateway usage(per gateway/month), snapshot storage(per GB/month), volume storage usage(per GB/month), data tranfer out(per GB/month)
- 
-
-**Types of Storage gateways**:
-
-- Gateway Stored Volumes: Store your primary data locally, while asynchronously backing up to S3 in the form of EBS snapshots. 
-  Gateway-Stored volumes are inexpensive and durable backup providers that you can recover locally or from Amazon EC2, low latency access to datasets, 
-  
-- Gateway Cached Volumes: Only your most frequently accessed data is stored locally. 
-  Your entire dataset is stored in S3 while retaining some portion of it locally in a cache for frequently accessed data
-  These volumes minimize the need to scale your on-premise storage infrastructure, while providing your app with low-latency access to frequently accessed data 
-  You don’t have to buy SAN arrays for your office/data center, so you get significant cost savings. 
-  If you lose the internet connectivity you will not be able to access all of your data
-  
-- Gateway Virtual Tape Library(VTL):  Have a limitless collection of virtual tapes. Each virtual tape can be stored in a  Virtual Tape library backed by Amazon S3 or a Virtual tape shelf backed by Amazon Glacier. The VTL exposes an industry standard iSCSI interface which provides your backup application with online access to the virtual tapes
-
-
+# Snowball:
+- This is a petabyte scale data transport solution that uses secure appliances to transfer large amounts of data into and out of AWS. 
+- It addresses common challenges with large-scale data transfers such as high network costs, long transfer times,
+  and security concerns. 
+- Transferring data with snowball is fast, simple, secure and can be as little as 1/5th the cost of high-speed internet. 
+- Currently, only available in the US, and only works with S3 both with importing and exporting. 
+- 80TB of snowball in all regions, you can get 50TB in the U.S.
+- Snowball uses tamper resistant enclosures, 256-bit encryption, and industry-standard Trusted Platform Module(TPM)
+  that is designed to ensure both security and full chain-of-custody or your data, as well as reduce management overhead
+  involved with transferring data into or out of AWS.
+- Once data transfer has been processed and verified, AWS performs a software erasure of the snowball appliance  
 
 # Import/Export:
 
@@ -562,15 +581,7 @@ or gateway-stored volumes that can be mounted as iSCSI devices by your on-premis
     Allows to import to EBS, S3, Glacier, export from S3
     you pay only for what you use. 
     3 pricing components: per device fee, a data load time charge, possible return shipping charges, or shipping to destinations not local to AWS
-    
-- Snowball: 
-    This is a petabyte scale data transport solution that uses secure appliances to transfer large amounts of data into and out of AWS. 
-    It addresses common challenges with large-scale data transfers such as high network costs, long transfer times, and security concerns. 
-    Transferring data with snowball is fast, simple, secure and can be as little as 1/5th the cost of high-speed internet. 
-    Currently, only available in the US, and only works with S3 both with importing and exporting. 
-    Each snowball can transfer upto 50Tb of data, and multiple appliances can be used for larger workloads. 
-    Snowball uses tamper resistant enclosures, 256-bit encryption, and industry-standard Trusted Platform Module(TPM) that is designed to ensure both security and full chain-of-custody or your data, as well as reduce management overhead involved with transferring data into or out of AWs.
-
+        
 # EC2(Elastic Compute Cloud)
 
 Provides resizable compute capacity in the cloud. 
