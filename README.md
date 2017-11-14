@@ -35,6 +35,10 @@ Following are the sequence of events:
 * [Concepts and Components](#concepts_introduction)
 * [IAM](#i_am)
 * [S3](#s_3)
+* [CloudFront](#cloudfront)
+* [Storage Gateway](#storage_gateway)
+* [Snowball](#snowball)
+* [S3 Transfer Acceleration](#s3_ta)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -493,6 +497,7 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Delete markers are replicated
 - Deleting individual versions or delete markers will not be replicated
 
+<a name ="cloudfront"></a>
 # CloudFront:
 - A CDN is a system of distributed servers (network) that deliver webpages and other web content to a user
    based on the geographic location of the user, the origin of the webpage and a content delivery server. 
@@ -526,7 +531,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
   - rtmp- media streaming
 - objects are cached for the life of ttl
 - if you clear the cached objects, you will be charged
-  
+
+<a name ="storage_gateway"></a>  
 # Storage Gateway:
 - This is a service that connects an on-premises software appliance with cloud-based storage to provide seamless and
   secure integration between the two. 
@@ -552,14 +558,18 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
          storage gateway's cache and upload buffer storage. 1GB - 32TB in size for cached volumes
     - **Gateway Virtual Tape Library/Tape gateway(VTL)**: backup and archiving solution.
          Have a limitless collection of virtual tapes. Each virtual tape can be stored in a  Virtual Tape library backed by 
-         Amazon S3 or a Virtual tape shelf backed by Amazon Glacier. The VTL exposes an industry standard iSCSI interface
-         which provides your backup application with online access to the virtual tapes. Each tape gateway is preconfigured
-         with a media changer and tape drives, which are available to your existing client backup applications as iSCSI devices.
+         Amazon S3 or a Virtual tape shelf backed by Amazon Glacier. 
+         The VTL exposes an industry standard iSCSI interface which provides your backup application with online access 
+         to the virtual tapes. 
+         Each tape gateway is preconfigured with a media changer and tape drives, which are available to your existing client 
+         backup applications as iSCSI devices.
          You add tape cartridges as you need to archive your data. Uses popular backup applications like NetBackup, Backup exec
          Veeam etc.
 
+<a name ="snowball"></a>
 # Snowball:
-- This is a petabyte scale data transport solution that uses secure appliances to transfer large amounts of data into and out of AWS. 
+- This is a petabyte scale data transport solution that uses secure appliances to transfer large amounts of data
+  into and out of AWS. 
 - It addresses common challenges with large-scale data transfers such as high network costs, long transfer times,
   and security concerns. 
 - Transferring data with snowball is fast, simple, secure and can be as little as 1/5th the cost of high-speed internet. 
@@ -568,20 +578,43 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Snowball uses tamper resistant enclosures, 256-bit encryption, and industry-standard Trusted Platform Module(TPM)
   that is designed to ensure both security and full chain-of-custody or your data, as well as reduce management overhead
   involved with transferring data into or out of AWS.
-- Once data transfer has been processed and verified, AWS performs a software erasure of the snowball appliance  
-
+- Once data transfer has been processed and verified, AWS performs a software erasure of the snowball appliance
+- **Snowball Edge**:
+   - A 100TB data transfer device with on-board storage & compute capabilities
+   - used for moving large amounts of data into and out of AWS
+   - as a temporary tier for large datasets or to support local workloads in remote/offline areas
+   - cluster together to form a local storage tier and process your data on-premises, helping you ensure your application
+     continue to run even when they are not able to access the cloud
+- **Snowmobile**:     
+   - An exabyte-scale data transfer service used to move large amounts of data to AWS
+   - can transfer upto 100PB per snowmobile in a 45ft long container
+   - makes it easy to move massive volumes of data to the cloud, including libraries, image repositories etc.
+   - in this way data is safe, transferred fast, and cost effective 
+     
 # Import/Export:
+- Import/Export Disk:
+    - Used before snowball was introduced    
+    - Accelerates moving large amount of data into and out of the AWS cloud using portable storage devices for transport.
+    - Faster than the internet transfer and more cost effective than upgrading your connectivity
+    - Allows to import to EBS, S3, Glacier, export from S3
+    - you pay only for what you use. 
+    - 3 pricing components: per device fee, a data load time charge, possible return shipping charges,
+      or shipping to destinations not local to AWS
 
-2 types:
+**Snowball Exam tips**:
+- Understand snowball
+- Understand import/export that is what was used before snowball
+- Snowball can import to S3, and export from S3
 
-- Import/Export Disk: 
-    Accelerates moving large amount of data into and out of the AWS cloud using portable storage devices for transport.
-    It transfers your data directly and off of storage devices using Amazon’s high-speed internal network and bypassing the internet. 
-    Faster than the internet transfer and more cost effective than upgrading your connectivity
-    Allows to import to EBS, S3, Glacier, export from S3
-    you pay only for what you use. 
-    3 pricing components: per device fee, a data load time charge, possible return shipping charges, or shipping to destinations not local to AWS
-        
+<a name ="s3_ta"></a>
+# What is S3 transfer acceleration?
+- accelerates uploads to S# using CloudFront edge networks
+- makes use of a distinct url to upload to a edge location which will then transfer to S3
+
+# Q. What is the correct format for a static website hosting?
+Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
+
+<a name ="ec2"></a>
 # EC2(Elastic Compute Cloud)
 
 Provides resizable compute capacity in the cloud. 
