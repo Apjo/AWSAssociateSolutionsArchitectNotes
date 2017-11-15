@@ -3,12 +3,10 @@ These are the notes I have prepared while doing the online course for `AWS Assoc
 
 The course is taught by [Ryan Kroonenburg](https://www.udemy.com/user/ryankroonenburg/).
 
-I use these notes whenever I forget or want to revise any concept of AWS
-
 # What do I need for this course:
 - AWS account Free tier
 - Domain name(optional)
-- A Mac/Linux/Windows Laptop
+- A Laptop with internet connection
 
 # History of AWS:
 It all started with **Chris Pinkman** and **Benjamin Black** presenting a paper on Amazon’s internal infrastructure, 
@@ -31,14 +29,23 @@ Following are the sequence of events:
 - Exam blueprint 
 [Example exam blueprint](http://awstrainingandcertification.s3.Amazonaws.com/production/AWS_certified_solutions_architect_associate_blueprint.pdf)
 
+<a name ="toc"></a>
 ### Table of Contents
 * [Concepts and Components](#concepts_introduction)
 * [IAM](#i_am)
 * [S3](#s_3)
+    * [S3 Versioning](#s_3_versioning)
+    * [S3 Lifecycle Management](#s_3_lifecycle_mgmt)
+    * [S3 Encryption](#s_3_encryption)
+    * [S3 Security](#s_3_security)
+    * [S3 Transfer Acceleration](#s3_ta)
+    * [S3 Static website](#s3_static_website)
+    * [S3 Exam Tips](#s3_exam_tips)
 * [CloudFront](#cloudfront)
+    * [CloudFront Exam Tips](#cloudfront_exam_tips)
 * [Storage Gateway](#storage_gateway)
 * [Snowball](#snowball)
-* [S3 Transfer Acceleration](#s3_ta)
+* [Import/Export](#import_export)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -126,7 +133,8 @@ Following are the sequence of events:
             
         2. DMS(Database Migration services): This allows migration of on-premise databases to AWS cloud
         
-        3. SMS(Server Migration Service): does same work as the DMS but targets virtual machines, to replicate vms to aws cloud
+        3. SMS(Server Migration Service): does same work as the DMS but targets virtual machines,
+            to replicate vms to aws cloud
                     
    7.  **Analytics**:
    
@@ -252,6 +260,8 @@ Following are the sequence of events:
                                  
    After AWS resources are deployed we can update or modify in a controlled manner,
    and predictable way in effect applying version control to your AWS infrastructure.
+   
+[Back to Table of Contents](#toc)
 
 <a name ="i_am"></a>
 #  IAM(Identity and Access Management)
@@ -307,6 +317,8 @@ IAM consists of the following:
 - create and customize your own password rotation policies
 - power user access allows access to all AWS resources except for mgmt of groups and users within IAM
 
+[Back to Table of Contents](#toc)
+
 # Active Directory Integration:
 ### How is it done?
 Imagine a user is at home, and he wants to login to the AWS console, and they are working on their own home network
@@ -359,14 +371,14 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 
 **Data Consistency model for for S3**:
 - Read after write consistency for PUTS on new objects
-- eventual consistency for overwrite PUTS and DELETES, i.e. if you update an object or delete an object it will take some time
-    for that to be consistent across different facilities or inside S3 bucket
+- Eventual consistency for overwrite PUTS and DELETES, i.e. if you update an object or delete an object,
+    it will take some time for that to be consistent across different facilities or inside S3 bucket.
      
 **S3 storage tiers and classes**:
-- _Standard S3 storage_: 99.99% availability, and 99.999999999% durability
+- _Standard S3 storage_: _**99.99% availability**_, and _**99.999999999% durability**_
 - _S3 - IA(Infrequently accessed)_: data that is accessed less frequently, but requires rapid access when needed, lower fee
     than S3, but charged on retrieval
-- _Reduced Redundancy Storage(RRS)_: still has 99.99% availability but only 99.99% durability over a given year 
+- _Reduced Redundancy Storage(RRS)_: still has _**99.99% availability**_ but only _**99.99% durability**_ over a given year 
     So, basically it is a little bit cheaper to Reduced Redundancy storage,
     but you only want to store files on them that are not important if you lose them.
     Only use Reduced Redundancy storage for replaceable data,so for example if you store 10,000 files so you could expect 
@@ -376,12 +388,13 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     and is optimized for data that is infrequently accessed and for which retrieval times of 3-5 hours are suitable
 
 **S3 Charges**:
-- storage: the more the storage you use, the cheaper it becomes
-- requests: # of requests
+- Storage: the more the storage you use, the cheaper it becomes
+- Requests: # of requests
 - Storage management pricing - add tags while storing data in S3, and allows you to control costs, charged on per tag basis
 - Data Transfer pricing: Data coming in is free, data moving around, replication is charged
-- transfer acceleration: fast, easy, and secure transfer of files over long distances between your end users and an S3 bucket
-    
+- Transfer acceleration: fast, easy, and secure transfer of files over long distances between your end users and an S3 bucket
+
+<a name ="s_3_versioning"></a>    
 **S3 Versioning**:
 - Stores all the versions of an object(including all writes and even if you delete and object).
     For example you might have a word file that says “Hello,World”, and you have saved it to your S3 bucket,
@@ -395,10 +408,12 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 **S3 Versioning Exam Tips**:
 - Stores all versions of the object(all writes and deletes)
 - Great backup tool
-- Once enabled, versioning cannot be disabled
+- Once enabled, versioning cannot be disabled, only suspended
 - Integrates with lifecycle rules
 - Versioning's MFA delete capability, which uses multi-factor authentication, can be used to provide additional security
+- cross region replication requires versioning enabled on the source bucket
 
+<a name ="s_3_lifecycle_mgmt"></a>
 **S3 Lifecycle management**:
 - Can be used in conjunction with versioning
 - Can be applied to current versions and previous versions.
@@ -415,7 +430,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - Transition to Standard-IA(128kb and 30 days after creation date)
     - Archive to glacier storage class(30 days after IA)
     - permanently delete
-      
+
+<a name ="s_3_encryption"></a>      
 **S3 Encryption**:
 - In Transit: 
     You can upload/download your data to S3 via SSL Encrypted end points and S3 can automatically encrypt your data at rest.
@@ -426,10 +442,11 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
      3) Server Side Encryption with Customer provided keys- SSE-C
     - Client Side Encryption: you encrypt data on client side
 
+<a name ="s_3_security"></a>
 **S3 Security**:
 - All buckets are PRIVATE by default. That means, if you were to type in the buckets publicly accessible URL address,
-    and it’s not a publicly available bucket, you wouldn’t be able to access object within that bucket.
-    You would have actually go in and make that bucket public 
+  and it’s not a publicly available bucket, you wouldn’t be able to access object within that bucket.
+  You would have actually go in and make that bucket public 
 - Allows Access Control Lists (an individual user can only have access to 1 bucket and have read only access)
 - Integrates with IAM using roles,for example allows EC2 users to have access to S3 buckets by roles
 - All endpoints are encrypted by SSL
@@ -453,13 +470,33 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Hosting static files
 - Hosting static websites
 
+<a name ="s3_ta"></a>
+# S3 transfer acceleration
+- accelerates uploads to S3 using CloudFront edge networks
+- makes use of a distinct url to upload to a edge location which will then transfer to S3
+- costs extra, and has the greatest impact on people who are in far away location
+
+# S3 static websites
+- Use S3 to host static websites
+- Serverless
+- Very cheap, scales automatically
+- STATIC only, cannot host dynamic sites
+
+# Q. What is the correct format for a static website hosting?
+Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
+
+[Back to Table of Contents](#toc)
+
+<a name ="s3_exam_tips"></a>
 **S3-Exam tips**:
-- Object based, only store files, not suitable to install an Operating System
+- *Object based*, only store files, not suitable to install an Operating System
 - Files are stored in buckets
-- Files can be 0 Bytes t0 5 TB
-- unique namespace
-- Read after Write consistency for PUTS of new objects
-- Eventual consistency overwrites for PUTS and DELETES
+- Files can be 0 Bytes to 5TB
+- Unlimited storage
+- S3 bucket name always looks like https://s3-<valid-aws-region-name>.amazonaws.com/<buket-name>
+- Unique namespace, i.e. names must be unique globally, and all lower case
+- *Read after Write consistency for PUTS of new objects*
+- *Eventual consistency overwrites for PUTS and DELETES*
 - S3(durable, immediately available, frequently accessed)
 - S3-IA(durable, immediately available, infrequently accessed)
 - S3-Reduced Redundancy Storage(data that is easily reproducible)
@@ -467,24 +504,25 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Core fundamentals of S3 object:
    - key(name), names are lexographically stored in order
    - value(data)
-   - versionid
+   - version ID
    - metadata
    - Subresources
     - ACLs
     - Torrent  
 - Successful uploads will generate a HTTP 200 status code
-- Read the S#3 FAQ manual before taking the exam!!!
+- You can load files to S3 much faster by enabling multipart upload
+- **Read the S3 FAQ manual before taking the exam!!!**
 
 **S3 Lab-Exam tips**:
 - Buckets are a universal namespace
 - Upload an object to S3 receive a HTTP 200 code
 - 3 different types of storage S3, S3-IA, S3 reduced redundancy storage
 - Encryption: 
-  - client side encryption
-  - server side encryption
-   - server side encryption with Amazon S3 managed keys(SSE-S3)
-   - server side encryption with KMS(SSE-KMS)
-   - server side encryption with customer provided keys(SSE-C)
+  - Client side encryption
+  - Server side encryption
+     1) Server side encryption with Amazon S3 managed keys(SSE-S3)
+     2) Server side encryption with KMS(SSE-KMS)
+     3) Server side encryption with customer provided keys(SSE-C)
 - Control access to buckets using either a bucket ACL or using bucket policies
 - **by DEFAULT buckets are PRIVATE & ALL OBJECTS stored inside them are PRIVATE**
 
@@ -496,6 +534,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - You cannot replicate to multiple buckets or use daisy chaining(at this time)
 - Delete markers are replicated
 - Deleting individual versions or delete markers will not be replicated
+
+[Back to Table of Contents](#toc)
 
 <a name ="cloudfront"></a>
 # CloudFront:
@@ -523,14 +563,18 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 
 **Web distribution**: Used for websites, RTMP: used for media streaming
 
+<a name="cloudfront_exam_tips"></a>
 **CloudFront-Exam Tips**:
 - Edge location is where content will be cached. Edge location are not for READ only, you can write them too.
-- Origin is the origin of all the files that the CDN will distribute
-- Distribution is the name given the CDN which consists of a collection of Edge locations
-  - web distribution
-  - rtmp- media streaming
-- objects are cached for the life of ttl
+- Origin is the origin of all the files that the CDN will distribute, this can be an S3 bucket, an EC2 instance, an ELB or
+  Route53
+- Distribution is the name given to the CDN which consists of a collection of Edge locations
+  - web distribution - typically used for websites
+  - rtmp- used for media streaming
+- objects are cached for the life of ttl(time to live)
 - if you clear the cached objects, you will be charged
+
+[Back to Table of Contents](#toc)
 
 <a name ="storage_gateway"></a>  
 # Storage Gateway:
@@ -566,6 +610,16 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
          You add tape cartridges as you need to archive your data. Uses popular backup applications like NetBackup, Backup exec
          Veeam etc.
 
+**Storage Gateway Exam Tips**:
+- File gateway: for flat files, stored directly on S3
+- Volume gateway
+    Stored volumes: Entire dataset is stored on site and is asynchronously backed up to S3
+    Cached volumes: entire data set is stored on S3 and the most frequently accessed data is cached on site
+- Gateway Virtual Tape Library(VTL)
+    Used for backup and popular backup applications like Netbackup, Backup Exec
+
+[Back to Table of Contents](#toc)
+    
 <a name ="snowball"></a>
 # Snowball:
 - This is a petabyte scale data transport solution that uses secure appliances to transfer large amounts of data
@@ -589,8 +643,16 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
    - An exabyte-scale data transfer service used to move large amounts of data to AWS
    - can transfer upto 100PB per snowmobile in a 45ft long container
    - makes it easy to move massive volumes of data to the cloud, including libraries, image repositories etc.
-   - in this way data is safe, transferred fast, and cost effective 
-     
+   - in this way data is safe, transferred fast, and cost effective
+    
+**Snowball Exam tips**:
+- Understand snowball
+- Understand import/export that is what was used before snowball
+- Snowball can import to S3, and export from S3
+
+[Back to Table of Contents](#toc)
+
+<a name= "import_export"></a>     
 # Import/Export:
 - Import/Export Disk:
     - Used before snowball was introduced    
@@ -600,19 +662,6 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - you pay only for what you use. 
     - 3 pricing components: per device fee, a data load time charge, possible return shipping charges,
       or shipping to destinations not local to AWS
-
-**Snowball Exam tips**:
-- Understand snowball
-- Understand import/export that is what was used before snowball
-- Snowball can import to S3, and export from S3
-
-<a name ="s3_ta"></a>
-# What is S3 transfer acceleration?
-- accelerates uploads to S# using CloudFront edge networks
-- makes use of a distinct url to upload to a edge location which will then transfer to S3
-
-# Q. What is the correct format for a static website hosting?
-Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
 
 <a name ="ec2"></a>
 # EC2(Elastic Compute Cloud)
