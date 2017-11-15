@@ -345,6 +345,8 @@ A: Whether or not you are authenticating to active directory first and then give
 if you get the temporary security credential first, which is then authenticated against the active directory?
 A: You always authenticate against active directory first and then you would be assigned the temporary security credential
 
+[Back to Table of Contents](#toc)
+
 ### AWS Object Storage and CDN - S3, Glacier and CloudFront
 <a name ="s_3"></a>
 **S3**:
@@ -394,6 +396,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Data Transfer pricing: Data coming in is free, data moving around, replication is charged
 - Transfer acceleration: fast, easy, and secure transfer of files over long distances between your end users and an S3 bucket
 
+[Back to Table of Contents](#toc)
+
 <a name ="s_3_versioning"></a>    
 **S3 Versioning**:
 - Stores all the versions of an object(including all writes and even if you delete and object).
@@ -413,6 +417,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Versioning's MFA delete capability, which uses multi-factor authentication, can be used to provide additional security
 - cross region replication requires versioning enabled on the source bucket
 
+[Back to Table of Contents](#toc)
+
 <a name ="s_3_lifecycle_mgmt"></a>
 **S3 Lifecycle management**:
 - Can be used in conjunction with versioning
@@ -423,6 +429,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - archive and permanent delete
     - transition to the Standard: Infrequent Access Storage class(128kb and 30 days after the creation date)
 
+[Back to Table of Contents](#toc)
+
 **S3 Lifecycle management Exam tips**:    
 - Can be used with versioning
 - Can be applied to current and previous versions
@@ -430,6 +438,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
     - Transition to Standard-IA(128kb and 30 days after creation date)
     - Archive to glacier storage class(30 days after IA)
     - permanently delete
+
+[Back to Table of Contents](#toc)
 
 <a name ="s_3_encryption"></a>      
 **S3 Encryption**:
@@ -442,6 +452,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
      3) Server Side Encryption with Customer provided keys- SSE-C
     - Client Side Encryption: you encrypt data on client side
 
+[Back to Table of Contents](#toc)
+
 <a name ="s_3_security"></a>
 **S3 Security**:
 - All buckets are PRIVATE by default. That means, if you were to type in the buckets publicly accessible URL address,
@@ -452,6 +464,8 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - All endpoints are encrypted by SSL
 - S3 buckets can be configured to create access logs which log all the requests made to the S3 bucket.
   This can be done to another bucket
+
+[Back to Table of Contents](#toc)
 
 **S3 Functionality**:
 - Static websites can be hosted on S3. No need for webservers, you can just upload a static `.html` file to an S3 bucket and
@@ -470,17 +484,23 @@ Amazon S3 is easy to use, with a simple web service interface to store and retri
 - Hosting static files
 - Hosting static websites
 
+[Back to Table of Contents](#toc)
+
 <a name ="s3_ta"></a>
 # S3 transfer acceleration
 - accelerates uploads to S3 using CloudFront edge networks
 - makes use of a distinct url to upload to a edge location which will then transfer to S3
 - costs extra, and has the greatest impact on people who are in far away location
 
+[Back to Table of Contents](#toc)
+
 # S3 static websites
 - Use S3 to host static websites
 - Serverless
 - Very cheap, scales automatically
 - STATIC only, cannot host dynamic sites
+
+[Back to Table of Contents](#toc)
 
 # Q. What is the correct format for a static website hosting?
 Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
@@ -662,6 +682,8 @@ Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
     - you pay only for what you use. 
     - 3 pricing components: per device fee, a data load time charge, possible return shipping charges,
       or shipping to destinations not local to AWS
+
+[Back to Table of Contents](#toc)
 
 <a name ="ec2"></a>
 # EC2(Elastic Compute Cloud)
