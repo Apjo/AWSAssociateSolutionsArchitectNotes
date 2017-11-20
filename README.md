@@ -688,44 +688,80 @@ Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
 <a name ="ec2"></a>
 # EC2(Elastic Compute Cloud)
 
-Provides resizable compute capacity in the cloud. 
-Reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity, both up and down, as computing requirements change.
+- Provides resizable compute capacity in the cloud. 
+- Reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity,
+  both up and down, as computing requirements change.
+- only pay for the capacity you actually use
+- provides developers the tools to build failire resilient apps and isloate from common failure scenarios  
 
 **EC2 options**:
 
-- On demand: Allow you to pay a fixed rate by the hour with no commitment. 
-   User that want low cost and flexibility without any upfront payment or long-term commitment. 
-   Apps with spiky, short term, or unpredictable workloads that cannot be interrupted. Apps being developed or tested for the first time
+- **_On demand_**: 
+    - Allow you to pay a fixed rate by the hour(or by the second) with no commitment. 
+    - User that want low cost and flexibility without any upfront payment or long-term commitment. 
+    - Apps with spiky, short term, or unpredictable workloads that cannot be interrupted.
+    - Apps being developed or tested for the first time
                
-- Reserved: 1 or 3 year terms, provide discounts on the hourly charge by providing a capacity reservation
-   Apps with steady state or predictable usage. Apps that require reserved capacity. Users able to make upfront payments to reduce their total computing costs even further
+- **_Reserved_**: 
+    - 1 or 3 year terms, provide discounts on the hourly charge by providing a capacity reservation
+    - Apps with steady state or predictable usage. Apps that require reserved capacity.
+    - Users able to make upfront payments to reduce their total computing costs even further
 
-- Spot: Enable you to bid whatever price you want for instance capacity, providing for even greater savings if your app has flexible start and end times 
-        Apps that are feasible to very low compute prices. Users with urgent computing needs for large amounts of additional capacity
-        If the spot instance is terminated by Amazon EC2, you will not be charged for the partial hour of usage, but if you terminate the instance yourself, you will be charged for any hour in which the instance ran
+- **_Spot_**: 
+    - Applications that have flexible start and end times.
+    - Enable you to bid whatever price you want for instance capacity, providing for even greater savings.
+    - Users with urgent computing needs for large amounts of additional capacity.
+    - If the spot instance is terminated by Amazon EC2, you will not be charged for the partial hour of usage,
+    but if you terminate the instance yourself, you will be charged for any hour in which the instance ran
+
+- **_Dedicated hosts_**:
+    - Useful for regulatory requirements that may not support multi-tenant virtualization
+    - Reduces costs by allowing you to use your own existing server-bound software licenses
+    - Can be purchased on-demand
+    - Can be purchased as a Reservation for up to 70% off the on-demand price 
+    - Useful for physical EC2 server dedicated for your use.
+        
 
 # EC2 Instance Types:
 
-| Family |    Speciality               |  Use Cases
-|------- |-----------------------------|----------------------------------------------------------|
-| T2     |Lowest Cost, General Purpose | Web Servers/Small DBs                                    | 
-| M4     |General Purpose              | Application Servers                                      |              
-| M3     |General Purpose              | Application Servers                                      |
-| C4     |Compute Optimized            | CPU Intensive Apps/DBs                                   |  
-| C3     |Compute Optimized            | CPU Intensive Apps/DBs                                   |
-| R3     |Memory Optimized             | Memory Intensive Apps/ DBs                               |
-| G2     |Graphics/General Purpose GPU |Video Encoding, Machine Learning, 3D Application Streaming|
-| I2     |High Speed Storage           | NoSQL DBs, Data Warehousing etc.                         |
-| D2     |Dense storage                |File Servers/Data Warehousing/Hadoop                      |
+| Family |    Speciality                |  Use Cases
+|------- |------------------------------|-----------------------------------------------------------|
+| T2     | Lowest Cost, General Purpose | Web Servers/Small DBs                                     | 
+| M4     | General Purpose              | Application Servers                                       |              
+| C4     | Compute Optimized            | CPU Intensive Apps/DBs                                    |  
+| R4     | Memory Optimized             | Memory Intensive Apps/ DBs                                |
+| G2     | Graphics/General Purpose GPU | Video Encoding, Machine Learning, 3D Application Streaming|
+| I2     | High Speed Storage           | NoSQL DBs, Data Warehousing etc.                          |
+| F1     | Field programmable gate array| hardware acceleration for your code                       |
+| D2     | Dense storage                | File Servers/Data Warehousing/Hadoop                      |
+| P2     | Graphics/General Purpose GPU | Machine Learning bitcoin mining etc.                      |
+| X1     | Memory Optimized             | SAP HANA/Apache Spark etc.                                |
+
 
 # How to remember?
-D for Density
-I for IOPS
-R for RAM
-T for cheap general purpose(think of T2 Micro)
+D - for Density
+
+I - for IOPS
+
+R - for RAM
+
+T - for cheap general purpose(think of T2 Micro)
+
 M - main choice for general purpose apps
-C for Compute
+
+C - for Compute
+
 G - Graphics
+
+F - FPGA 
+
+P - Graphics(think pics)
+
+X - Extreme memory
+
+Finally we down to `DR MC GIFT PX` 
+
+[Back to Table of Contents](#toc)
 
 # Elastic Block Storage
 
