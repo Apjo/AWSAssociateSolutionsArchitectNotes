@@ -46,6 +46,9 @@ Following are the sequence of events:
 * [Storage Gateway](#storage_gateway)
 * [Snowball](#snowball)
 * [Import/Export](#import_export)
+* [Elastic Cloud Compute EC2](#ec2)
+    * [EC2 instance types](#ec2_instance_types)
+* [Elastic Block Storage EBS](#ebs)    
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -692,10 +695,10 @@ Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
 - Reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity,
   both up and down, as computing requirements change.
 - only pay for the capacity you actually use
-- provides developers the tools to build failire resilient apps and isloate from common failure scenarios  
-
+- provides developers the tools to build failure resilient apps and isloate from common failure scenarios
+  
+<a name ="ec2_options"></a>
 **EC2 options**:
-
 - **_On demand_**: 
     - Allow you to pay a fixed rate by the hour(or by the second) with no commitment. 
     - User that want low cost and flexibility without any upfront payment or long-term commitment. 
@@ -720,8 +723,10 @@ Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
     - Can be purchased on-demand
     - Can be purchased as a Reservation for up to 70% off the on-demand price 
     - Useful for physical EC2 server dedicated for your use.
-        
 
+[Back to Table of Contents](#toc)
+
+<a name ="ec2_instance_types"></a>
 # EC2 Instance Types:
 
 | Family |    Speciality                |  Use Cases
@@ -759,29 +764,73 @@ P - Graphics(think pics)
 
 X - Extreme memory
 
-Finally we down to `DR MC GIFT PX` 
+Finally we are down to the term `DR MC GIFT PX` 
 
 [Back to Table of Contents](#toc)
 
+<a name ="ebs"></a>
 # Elastic Block Storage
+- Allows you to create storage volumes and attach them to Amazon EC2 instances. 
+- Once attached, you can create a file system on top of these volumes, run a database,
+    or use them in any other way you would use a block device. 
+- Amazon EBS volumes are places in specific Availability Zone,
+    where they are automatically replicated to protect you from the failure of a single component.
 
-Allows you to create storage volumes and attach them to Amazon EC2 instances. 
-Once attached, you can create a file system on top of these volumes, run a database, or use them in any other way you would use a block device. 
-Amazon EBS volumes are places in specific Availability Zone, where they are automatically replicated to protect you from the failure of a single component.
-
+<a name ="ebs_volume_types"></a>
 # EBS Volume Types:
+- **_General Purpose SSD(GP2)_**:
+    - General purpose, balances both price and performance.
+    - Ratio of 3 IOPS per GB with upto 10,000 IOPS and the ability to burst upto 3,000 IOPS for short periods 
+    for volumes < 334Gib and above
+- **_Provisioned IOPS SSD(I01)_**: 
+    - Designed for I/O apps  such as large relational or NoSQL databases.
+    - Use if you need > 10,000 IOPS
+    - Can provision up to 20,000 IOPS per volume
+- **_Throughput Optimized HDD(ST1)_**:
+    - Used for big data, data warehouses, and log processing etc.
+    - where data is written in sequence
+    - they cannot be boot volumes
+- **_Cold HDD(SC1)_**:
+    - lowest cost storage for infrequently accessed workloads
+    - File server
+    - Cannot be a boot volume
+- **_Magnetic(Standard)_**: 
+    - Lowest cost per gigabyte of all EBS volume types.
+    - Ideal for workloads where data is accessed infrequently, and apps where the lowest storage cost is important
+    - Termination protection is turned off by default, you must turn it on
 
-- General Purpose SSD(GP2): 99.999% availability,ratio of 3 IOPS per GB with upto 10,000 IOPS and the ability to burst upto 3,000 IOPS for short periods for volumes < 1GB
-- Provisioned IOPS SSD(I01): designed for I/O apps  such as large relational or NoSQL databases. Use if you need > 10,000 IOPS
-- Magnetic(Standard): lowest cost per gigabyte of all EBS volume types. Magnetic volumes are ideal for workloads where data is accessed infrequently, and apps where the lowest storage cost is important.
-    Termination protection is turned off by default, you must turn it on
+[Back to Table of Contents](#toc)
 
-On an EBS-backed instance, the default action is for the root EBS volume to be deleted when the instance is terminated
-**Root volumes** cannot be encrypted by default, you need a third party tool(bitlocker) to encrypt the root volume
-Additional volumes can be encrypted
+**EC2 Exam tips**:
+- Know the differences between
+    - one demand
+    - spot
+    - reserved
+    - dedicated hosts
+- Remember with spot instances
+    - if you terminate the instance, you pay for the hour
+    - if AWS terminates it, you get the hour in which it was terminated for free
+- EBS consists of:
+    - SSD, General purpose-GP2-(up to 10,000 IOPS)
+    - SSD, Provisioned IOPS-IO-1-(more than 10,000 IOPS)
+    - HDD, Throughput optimized-ST1-frequently accessed workloads
+    - HDD, Cold-SC1-less frequently accessed data
+    - HDD, magnetic-standard-cheap, infrequently accessed storage
+- you cannot mount 1 ebs volume to multiple ec2 instances, use instead EFS
+- different ec2 types `DR MC GIFT PX`    
+
+**EC2 Lab summary**:
+- Termination protection is turned off by default, you must turn it on
+- On an EBS backed instance, the default action is for the root EBS volume to be deleted when the instance is terminated
+- EBS root volumes of your DEFAULT AMI's cannot be encrypted. You can also use a third party tool to encrypt the root volume, or
+    this can be done when creating ami's in the aws console or using the api
+- Additional volumes can be encrypted
+
+[Back to Table of Contents](#toc)
+
+# Security Groups Basics
 
 # Security Groups Lab
-
 - Changes to security rule takes place immediately
 - You cannot deny any http rule, you can only allow at any given time
 - All inbound traffic is blocked
