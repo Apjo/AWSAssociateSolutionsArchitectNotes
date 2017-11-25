@@ -48,7 +48,20 @@ Following are the sequence of events:
 * [Import/Export](#import_export)
 * [Elastic Cloud Compute EC2](#ec2)
     * [EC2 instance types](#ec2_instance_types)
-* [Elastic Block Storage EBS](#ebs)    
+    * [EC2 Exam Tips](#ec2_exam_tips)
+* [Elastic Block Storage EBS](#ebs)  
+    * [EBS volume types](#ebs_volume_types)
+    * [EBS volumes vs Snapshots Lab](#volume_vs_snapshot_lab)
+    * [EBS Volumes and snapshots security](#volumes_snapshots_security)
+    * [EBS vs Instance Store Exam Tips](#ebs_instance_exam_tips)
+* [Security group basics](#security_grp_basics)
+* [RAID](#raid)      
+    * [How do I take a snapshot of a RAID Array](#raid_snapshot)
+    * [Encrypted Root device volume & Snapshots lab](#encrypted_root_vol_snapshot_lab)
+    * [Creating an ami](#ami_create)
+    * [AMI Types](#ami_types)
+* [Load Balancer and HealthCheck Labs](#loadbalancer_healthcheck_lab)
+* [CloudWatch EC2](#cloudwatch)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -769,7 +782,7 @@ Finally we are down to the term `DR MC GIFT PX`
 [Back to Table of Contents](#toc)
 
 <a name ="ebs"></a>
-# Elastic Block Storage
+# Elastic Block Storage(EBS)
 - Allows you to create storage volumes and attach them to Amazon EC2 instances. 
 - Once attached, you can create a file system on top of these volumes, run a database,
     or use them in any other way you would use a block device. 
@@ -788,10 +801,10 @@ Finally we are down to the term `DR MC GIFT PX`
     - Can provision up to 20,000 IOPS per volume
 - **_Throughput Optimized HDD(ST1)_**:
     - Used for big data, data warehouses, and log processing etc.
-    - where data is written in sequence
-    - they cannot be boot volumes
+    - Where data is written in sequence
+    - They cannot be boot volumes
 - **_Cold HDD(SC1)_**:
-    - lowest cost storage for infrequently accessed workloads
+    - Lowest cost storage for infrequently accessed workloads
     - File server
     - Cannot be a boot volume
 - **_Magnetic(Standard)_**: 
@@ -799,11 +812,34 @@ Finally we are down to the term `DR MC GIFT PX`
     - Ideal for workloads where data is accessed infrequently, and apps where the lowest storage cost is important
     - Termination protection is turned off by default, you must turn it on
 
+<a name ="volume_vs_snapshot_lab"></a>
+# EBS Volumes vs Snapshot Lab
+- **EBS volume and EC2 instance will always be in the same AZ**
+- In order to move 1 EBS volume from 1 AZ to other you need to create a snapshot first and then from that snapshot
+    you can create a new volume in a new AZ
+- In order to move one instance in a region to another region, first you need to do is create a snapshot, and then you copy 
+    the snapshot to the new region, once it is in the new region you essentially create an **image of that snapshot**,
+    and then will be able to boot from EC2
+- Snapshots are used for backups, and images are used to boot ec2 instances from volumes
+- Volumes exists on EBS, think of them as virtual hard disk
+- Snapshots exists on S3
+- Snapshots are point in time copies of volumes
+- Snapshots of encrypted volumes are encrypted automatically
+- Volumes restored from encrypted snapshots are encrypted automatically
+- You can share snapshots, but only if they are unencrypted
+- Snapshots are incremental- this means that only the blocks that have changed since your last snapshot are moved to s3
+- Creating the first snapshot takes a lot of time
+- To create  snapshot for Amazon EBS volumes that serve as root devices, you should stop the instance before taking a snapshot
+    However you can take a snap when the instance is running
+- You can create ami's from volumes and snapshots
+- You can change EBS volume sizes on the fly, including changing the size and storage type
+    
 [Back to Table of Contents](#toc)
 
+<a name ="ec2_exam_tips"></a>
 **EC2 Exam tips**:
 - Know the differences between
-    - one demand
+    - on demand
     - spot
     - reserved
     - dedicated hosts
@@ -816,8 +852,8 @@ Finally we are down to the term `DR MC GIFT PX`
     - HDD, Throughput optimized-ST1-frequently accessed workloads
     - HDD, Cold-SC1-less frequently accessed data
     - HDD, magnetic-standard-cheap, infrequently accessed storage
-- you cannot mount 1 ebs volume to multiple ec2 instances, use instead EFS
-- different ec2 types `DR MC GIFT PX`    
+- You cannot mount 1 ebs volume to multiple ec2 instances, use instead EFS
+- Different ec2 types `DR MC GIFT PX`    
 
 **EC2 Lab summary**:
 - Termination protection is turned off by default, you must turn it on
@@ -828,114 +864,127 @@ Finally we are down to the term `DR MC GIFT PX`
 
 [Back to Table of Contents](#toc)
 
+<a name ="security_grp_basics"></a>
 # Security Groups Basics
+- A virtual firewall
+- One Ec2 instance can have multiple security groups
+- One security group can be attached to multiple Ec2 instances
+- Are stateful, if you create an inbound rule allowing traffic in, traffic will be allowed back out again
+- All inbound traffic is blocked by default
+- All outbound traffic is allowed by default
+- Changes to security groups take place immediately
+- You cannot block specific Ip addresses you need to use network access control lists
+- You can specify allow rules, but not deny rules
 
-# Security Groups Lab
-- Changes to security rule takes place immediately
-- You cannot deny any http rule, you can only allow at any given time
-- All inbound traffic is blocked
-- All outbound traffic is allowed
-- You can have any number of EC2 instances within a security group
-- Security groups are STATEFUL -> if you create an inbound rule allowing traffic in, that traffic is automatically allowed back out again
-
-# Volume vs snapshots lab
-
-**Volume**:
-
-- exists on a EBS
-- Is a virtual HD
-
-**Snapshot**:
-
-- Exists on S3
-- You can take a snapshot of a volume, this will store that volume on S3 that will store the volume in S3
-- They are point in time copies of volumes
-- Snapshots are incremental, this means that only the blocks that have changed since your last snapshot are moved to S3
-- It takes time to create the first snapshot
-
+<a name ="volumes_snapshots_security"></a>
 **Volume vs snapshots - security**:
-
 - Snapshots of encrypted volumes are encrypted automatically
 - Volumes restored from encrypted snapshots are encrypted automatically
 - You can share snapshots, but only if they are unencrypted. These snapshots can be shared with other AWS accounts or made public
 
-**Snapshots of Root Device Volumes**:
-
-To create  snapshot for Amazon EBS volumes that serve as root devices, you should stop the instance before taking a snapshot
-
+<a name ="raid"></a>
 # RAID, Volumes and Snapshots:
 
 **RAID**:
-
-Redundant Array of Independent Disks
-
-**Types**:
-
+- Redundant Array of Independent Disks
 - RAID 0: Striped, No redundancy, good performance
 - RAID 1: Mirrored, Redundancy
-- RAID 5: good for reads, bad for writes, AWS does not recommend putting RAID 5 ever on EBS
+- RAID 5: Good for reads, bad for writes, AWS does not recommend putting RAID 5 ever on EBS
 - RAID 10: Striped and Mirrored, Good redundancy, good performance
+- You will use RAID arrays on AWS when you are not getting the disc I/O when required. Add multiple volumes and create a RAID
+    array to give you the disc I/O you require, typically you will end up using RAID0 or RAID10
 
-
+<a name ="raid_snapshot"></a>
 **How do I take a snapshot of a RAID Array**:
 
 **Problem**: 
+Take a snapshot, the snapshot excludes data held in the cache by apps and the OS. This tends not to matter on a single volume,
+however using multiple volumes in a RAID array, this can be a problem due to interdependencies of the array.
 
-Take a snapshot, the snapshot excludes data held in the cache by apps and the OS. This tends not to matter on a single volume, however using multiple volumes in a RAID array, this can be a problem due to interdependencies of the array.
-
-**Solution**:
- 
-- take an application consistent snapshot
+**Solution**: 
+- Take an application consistent snapshot
 - Stop the app from writing to the disk
-- Flush all the caches to the disk
+- Flush all the caches to the disk  
+     1. Freeze the filesystem
+     2. Unmount the RAID array
+     3. Shutting down the associated EC2 instance
 
-**How can we do this?**
-  
- 1. Freeze the filesystem
- 2. Unmount the RAID array
- 3. Shutting down the associated EC2 instance
+[Back to Table of Contents](#toc)
 
+<a name ="encrypted_root_vol_snapshot_lab"></a>
+# Encrypted Root device Volumes & Snapshots - Lab
+- To create a snapshot for an EBS volume that serve as root devices,you should stop the instance before taking the snapshot
+- Snapshots of encrypted volumes are encrypted automatically
+- Volumes restored from encrypted snapshots are encrypted automatically
+- You can share share snapshots only if they are unencrypted, these snapshots can be shared with other AWS accounts,
+    or made public
 
+[Back to Table of Contents](#toc)
+
+<a name ="ami_create"></a>
 # Creating an Amazon Machine Image(AMI):
+- Provides the information required to launch a virtual server in the cloud.
+- You specify an AMI when you launch an instance, and you can launch as many instances from the AMI as you need.
+- You can also launch instances from as many different AMIs as you need. 
+- It consists of the following:
+    - A template for the root volume of the instance(for example an Operating System, an app server, and apps)
+    - Launch permissions that control which AWS accounts can use the AMI to launch the instance
+    - A block device mapping that specifies the volumes to attach to the instance when it’s launched
+- AMIs are regional, you can only launch an AMI from the region in which it is stored. 
+- However you can copy AMI’s to other regions using the console,command line or the Amazon EC2 API
 
-Provides the information required to launch a virtual server in the cloud. You specify an AMI when you launch an instance, and you can launch as many instances from the AMI as you need. You can also launch instances from as many different AMIs as you need. 
+[Back to Table of Contents](#toc)
 
-It consists of the following:
-
-- A template for the root volume of the instance(for example an Operating System, an app server, and apps)
-- Launch permissions that control which AWS accounts can use the AMI to launch the instance
-- A block device mapping that specifies the volumes to attach to the instance when it’s launched
-
-AMIs are regional, you can only launch an AMI from the region in which it is stored. 
-However you can copy AMI’s to other regions using the console,command line or the Amazon EC2 API
-
-
-# EBS Root volumes vs Instance Store
-
-You can select an AMI from 
-
-- Region
-- OS
-- Architecture(32-bit or 64-bit)
-- Launch permissions
-- Storage for the Root Device(Root Device Volume)
-  - Instance Store(Ephemeral storage). These cannot be stopped. If the underlying host fails, you will lose your data. We can reboot and not lose data
-  - EBS backed volumes. These instances can be stopped. You will not lose the data on this instance if it is stopped. We can reboot and not lose data
-
-By default both ROOT volumes will be deleted on termination, however with EBS volumes, you can tell AWS to keep the root device volume.
-
+<a name ="ami_types"></a>
+# AMI types(EBS vs Instance Store)
+- You can select an AMI from:
+    - Region
+    - Operating System
+    - Architecture(32-bit or 64-bit)
+    - Launch permissions
+    - Storage for the Root Device(Root Device Volume)
+      - **_Instance Store(Ephemeral storage)_**:
+            - These cannot be stopped.
+            - If the underlying host fails, you will lose your data.
+            - We can reboot and not lose data
+      - **_EBS backed volumes_**:
+            - These instances can be stopped.
+            - You will not lose the data on this instance if it is stopped.
+            - We can reboot and not lose data
+- By default both ROOT volumes will be deleted on termination, however with EBS volumes,
+  you can tell AWS to keep the root device volume.
 - All AMIs are categorized as either backed by Amazon EBS or backed by instance store
-- For EBS volumes: The root device for an instance launched from the AMI is an Amazon EBS volume created from an Amazon EBS snapshot. If you need fast provisioning times we prefer EBS backed volumes.
-- For Instance store volumes: The root device for an instance launched from the AMI is an instance store volume created from a template stored in Amazon S3. It takes time to provision an instance store volume than a EBS volume
+- For EBS volumes: The root device for an instance launched from the AMI is an Amazon EBS volume created from an 
+    Amazon EBS snapshot. If you need fast provisioning times we prefer EBS backed volumes.
+- For Instance store volumes: The root device for an instance launched from the AMI is an instance store volume created 
+    from a template stored in Amazon S3. It takes time to provision an instance store volume than a EBS volume.
+    This might take some time to provision.
 
+[Back to Table of Contents](#toc)
+
+<a name ="ebs_instance_exam_tips"></a>
+# EBS vs Instance Store - Exam Tips
+- Instance store volumes are sometimes called ephemeral storage
+- Instance store volumes cannot be stopped. If the underlying host fails, you will lose your data
+- EBS backed instances can be stopped. You will not lose the data on this instance if it is stopped
+- You can reboot both, you will not lose your data
+- By default, both ROOT volumes will be deleted on termination, however with EBS volumes, you can tell AWS to keep the root 
+  device volume
+
+[Back to Table of Contents](#toc)
+
+<a name ="loadbalancer_healthcheck_lab"></a>
 # Load Balancers and Health Checks
+- Instances monitored by ELB can be reported as `InService`, or `OutOfService`
+- They provide Health Checks by simply talking to it
+- Have their own DNS name. You are never given an IP address. Amazon handles it on their own.
+- Read the ELB FAQ for Classic Load Balancers
 
-- They can be Inservice or out of service
-- They provide Health Checks
-- Have their own DNS name. You are never given an IP address
+[Back to Table of Contents](#toc)
 
-# CloudWatch:
-
+<a name ="cloudwatch"></a>
+# CloudWatch EC2:
+- Default metrics available for EC2 instance: CPU related, Disk related, Network related, and Status check
 - Standard monitoring = 5 minutes
 - Detailed monitoring = 1 minute
 - Creates awesome dashboards to see what is happening with your AWS environment
