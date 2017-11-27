@@ -812,6 +812,7 @@ Finally we are down to the term `DR MC GIFT PX`
     - Ideal for workloads where data is accessed infrequently, and apps where the lowest storage cost is important
     - Termination protection is turned off by default, you must turn it on
 
+[Back to Table of Contents](#toc)
 <a name ="volume_vs_snapshot_lab"></a>
 # EBS Volumes vs Snapshot Lab
 - **EBS volume and EC2 instance will always be in the same AZ**
@@ -821,18 +822,17 @@ Finally we are down to the term `DR MC GIFT PX`
     the snapshot to the new region, once it is in the new region you essentially create an **image of that snapshot**,
     and then will be able to boot from EC2
 - Snapshots are used for backups, and images are used to boot ec2 instances from volumes
-- Volumes exists on EBS, think of them as virtual hard disk
-- Snapshots exists on S3
+- **_Volumes exists on EBS_**, think of them as virtual hard disk
+- **_Snapshots exists on S3_**
 - Snapshots are point in time copies of volumes
-- Snapshots of encrypted volumes are encrypted automatically
-- Volumes restored from encrypted snapshots are encrypted automatically
-- You can share snapshots, but only if they are unencrypted
-- Snapshots are incremental- this means that only the blocks that have changed since your last snapshot are moved to s3
-- Creating the first snapshot takes a lot of time
+- You can take a snapshot of volume, this will store that volume on S3
+- **_Snapshots are incremental_** this means that only the blocks that have changed since your last snapshot are moved to s3
+- **_Creating the first snapshot takes a lot of time_**
 - To create  snapshot for Amazon EBS volumes that serve as root devices, you should stop the instance before taking a snapshot
     However you can take a snap when the instance is running
 - You can create ami's from volumes and snapshots
 - You can change EBS volume sizes on the fly, including changing the size and storage type
+- **You must deregister the AMI before being able to delete the root device.**
     
 [Back to Table of Contents](#toc)
 
@@ -852,14 +852,17 @@ Finally we are down to the term `DR MC GIFT PX`
     - HDD, Throughput optimized-ST1-frequently accessed workloads
     - HDD, Cold-SC1-less frequently accessed data
     - HDD, magnetic-standard-cheap, infrequently accessed storage
-- You cannot mount 1 ebs volume to multiple ec2 instances, use instead EFS
+- **You cannot mount or attach 1 EBS volume to multiple EC2 instances, use instead EFS**
 - Different ec2 types `DR MC GIFT PX`    
 
+[Back to Table of Contents](#toc)
+
 **EC2 Lab summary**:
-- Termination protection is turned off by default, you must turn it on
-- On an EBS backed instance, the default action is for the root EBS volume to be deleted when the instance is terminated
-- EBS root volumes of your DEFAULT AMI's cannot be encrypted. You can also use a third party tool to encrypt the root volume, or
-    this can be done when creating ami's in the aws console or using the api
+- **_Termination protection_** is turned **off** by default, you must turn it on
+- On an **_EBS backed instance_**, the default action is for the **_root EBS volume_** 
+    to be deleted when the instance is terminated
+- Root volumes cannot be encrypted. You can also use a third party tool to encrypt the root volume,
+    or this can be done when creating ami's in the aws console or using the api
 - Additional volumes can be encrypted
 
 [Back to Table of Contents](#toc)
@@ -882,9 +885,10 @@ Finally we are down to the term `DR MC GIFT PX`
 - Volumes restored from encrypted snapshots are encrypted automatically
 - You can share snapshots, but only if they are unencrypted. These snapshots can be shared with other AWS accounts or made public
 
+[Back to Table of Contents](#toc)
+
 <a name ="raid"></a>
 # RAID, Volumes and Snapshots:
-
 **RAID**:
 - Redundant Array of Independent Disks
 - RAID 0: Striped, No redundancy, good performance
@@ -913,7 +917,7 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 
 <a name ="encrypted_root_vol_snapshot_lab"></a>
 # Encrypted Root device Volumes & Snapshots - Lab
-- To create a snapshot for an EBS volume that serve as root devices,you should stop the instance before taking the snapshot
+- To create a snapshot for an EBS volume that serve as root devices, you should stop the instance before taking the snapshot
 - Snapshots of encrypted volumes are encrypted automatically
 - Volumes restored from encrypted snapshots are encrypted automatically
 - You can share share snapshots only if they are unencrypted, these snapshots can be shared with other AWS accounts,
@@ -930,7 +934,7 @@ however using multiple volumes in a RAID array, this can be a problem due to int
     - A template for the root volume of the instance(for example an Operating System, an app server, and apps)
     - Launch permissions that control which AWS accounts can use the AMI to launch the instance
     - A block device mapping that specifies the volumes to attach to the instance when it’s launched
-- AMIs are regional, you can only launch an AMI from the region in which it is stored. 
+- **AMIs are regional**, you can only launch an AMI from the region in which it is stored. 
 - However you can copy AMI’s to other regions using the console,command line or the Amazon EC2 API
 
 [Back to Table of Contents](#toc)
@@ -952,11 +956,11 @@ however using multiple volumes in a RAID array, this can be a problem due to int
             - You will not lose the data on this instance if it is stopped.
             - We can reboot and not lose data
 - By default both ROOT volumes will be deleted on termination, however with EBS volumes,
-  you can tell AWS to keep the root device volume.
+    you can tell AWS to keep the root device volume.
 - All AMIs are categorized as either backed by Amazon EBS or backed by instance store
-- For EBS volumes: The root device for an instance launched from the AMI is an Amazon EBS volume created from an 
+- **_For EBS volumes_**: The root device for an instance launched from the AMI is an Amazon EBS volume created from an 
     Amazon EBS snapshot. If you need fast provisioning times we prefer EBS backed volumes.
-- For Instance store volumes: The root device for an instance launched from the AMI is an instance store volume created 
+- **_For Instance store volumes_**: The root device for an instance launched from the AMI is an instance store volume created 
     from a template stored in Amazon S3. It takes time to provision an instance store volume than a EBS volume.
     This might take some time to provision.
 
@@ -984,6 +988,8 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 
 <a name ="cloudwatch"></a>
 # CloudWatch EC2:
+- CloudWatch is for performance monitoring
+- CloudTrail is for auditing
 - Default metrics available for EC2 instance: CPU related, Disk related, Network related, and Status check
 - Standard monitoring = 5 minutes
 - Detailed monitoring = 1 minute
@@ -992,197 +998,144 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 - Events help you to respond to state changes in your AWS resources
 - Logs allow to aggregate, monitor, and store logs
 
-# The AWS Command Line(CLI) and EC2
-# Identity Access Management Roles Lab
+[Back to Table of Contents](#toc)
 
+<a name ="iam_with_ec2"></a>
+# Using IAM roles with EC2 Lab
 - Roles are more secure than storing your access key and secret access key on individual EC2 instances
 - Roles are easier to manage
-- Roles can only be assigned when that EC2 instance is being provisioned
-- Roles are universal, you can use them in any region
+- Roles can be assigned to an EC2 instance AFTER it has been provisioned using both the command line & the AWS console
+- **Roles are universal, you can use them in any region**
 
-# Bash Scripting Lab
-# Instance Metadata
+[Back to Table of Contents](#toc)
 
-- Metadata information location: curl http://169.254.169.254/latest/meta-data/
+<a name ="ec2-meta-data"></a>
+# EC2 Instance Metadata
+- Metadata information location: **curl http://169.254.169.254/latest/meta-data/**
+- public ip curl http://169.254.169.254/latest/meta-data/public-ipv4
 
+[Back to Table of Contents](#toc)
+
+<a name ="autoscaling"></a>
 # AutoScaling 101
-# Launch Configurations & Auto Scaling Groups
+## Launch Configurations & Auto Scaling Groups
+- Before you create auto scaling group you need to create a launch configuration
 
+[Back to Table of Contents](#toc)
+
+<a name ="ec2_placement_groups"></a>
 # EC2 Placement Groups
-
-**What is a placement group?**:
-
-- Is a logical grouping of instances within a single Availability zone. 
+- Is a logical grouping of instances within a **_single Availability zone_**. 
 - Enables apps to participate in a low-latency , 10Gbps network
-- Recommended for apps that benefit from low network latency, high network throughput, or both
-- Cannot span multiple availability zones
+- Recommended for apps that benefit from **_low network latency, high network throughput, or both_**
+- **_Cannot span multiple availability zones_**
 - The name you specify a placement group must be unique within your AWS account
-- Only certain types of instances can be launched in a placement group(Compute optimized, GPU, Memory Optimized, Storage Optimized)
+- Only certain types of instances can be launched in a placement group(Compute optimized, GPU, Memory Optimized,
+    Storage Optimized)
 - AWS recommends homogenous instances (instances of the same size, and same family)within placement groups
 - Cannot merge placement groups
-- Cannot move an existing instance into a placement group. You can create an AMI from your existing instance, and then launch a new instance from the AMI into a placement group
+- Cannot move an existing instance into a placement group. You can create an AMI from your existing instance,
+    and then launch a new instance from the AMI into a placement group
 
+[Back to Table of Contents](#toc)
 
+<a name ="efs"></a>
 # EFS(Elastic File System):
-
 - A file storage service for EC2 instances. A simple interface that allows you to create and quickly configure file systems
-- Storage capacity is elastic, growing and shrinking automatically as you add and remove files, so your app has the storage it needs, when they need it
-- Supports NFS version v4
-- You only pay for the storage you use(no pre-provisioning required)
-- Can scale upto petabytes
-- Supports thousands of concurrent NFS connections
-- Data is stored across multiple AZ’s within a region
-- Read After Write consistency
-- Is a BLOCK based storage
+- Storage capacity is elastic, growing and shrinking automatically as you add and remove files,
+    so your app has the storage it needs, when they need it
+- **_Supports NFS version v4_**
+- **_You only pay for the storage you use(no pre-provisioning required), not like EBS, we can just start putting files on it_**
+- **_Can scale up to petabytes_**
+- **_Supports thousands of concurrent NFS connections_**
+- **_Data is stored across multiple AZ’s within a region_**.
+    We do not get any durability rating from Amazon since it is quite new
+- **_Read After Write consistency_**
+- EFS is a **_BLOCK based storage_**, we can share files with other EC2 instances.
+- make sure EC2 instances are in the same security group as the EFS
+- We make use of EFS essentially as a file server, making it as a centralized repository
+- We can apply user level and/or directory level permissions, make directories restricted
 
+[Back to Table of Contents](#toc)
+
+<a name ="aws_lambda"></a>
 # Lambda Concepts
+- A compute service where you can upload your code and create a lambda function
+- Takes care of provisioning and managing the servers that you use to run the code
+- We need not worry about OS, patching, scaling etc.
+- A lambda basically is encapsulating data centres, hardware, assembly code/protocols, high level languages, OS,
+    application layer etc.
+- We can use Lambda as an event-driven compute service where AWS Lambda runs your code in response to events.
+    These events could change be changes to data in an Amazon S3 bucket or an Amazon DynamoDB table
+- We can also use it as a compute service to run your code in response to HTTP requests using Amazon API Gateway or
+    API calls made using AWS SDKs.
+- 1 request will invoke 1 lambda function, it scales out easily.
+- Languages supported are Node.js, Java, Python, C#
+- Lambda pricing:
+    - _**Number of requests**_: First 1 million requests are free. $0.20 per 1 million requests thereafter
+    - _**Duration**_: Calculated from the time your code begins executing until it returns or otherwise terminates,
+        rounded up to the nearest 100ms. The price depends on the amount of memory you allocate to your function.
+        You are charged $0.00001667 for every GB-second used
+- Why Lambda?
+    - No servers
+    - Continuously scaling
+    - Really cheap
 
-A compute service where you can upload your code and create a lambda function
-Takes care of provisioning and managing the servers that you use to run the code
-We need not worry about OS, patching, scaling etc.
+[Back to Table of Contents](#toc)
 
-### It can be used in the following ways:
-As an event-driven compute service where AWS Lambda runs your code in response to events. These events could change be changes to data in an Amazon S3 bucket or an Amazon DynamoDB table
-As a compute service to run your code in response to HTTP requests using Amazon API Gateway or API calls made using AWS SDKs.
+<a name ="aws_lambda_exam_tips"></a>
+**AWS Lambda-Exam tips**:
+- Scales out(not up) automatically
+- Lambda functions are independent 1 event = 1 function
+- Lambda is serverless
+- Know what services are serverless: eg: S3, API Gateway, Lambda, DynamoDB
+- 1 Lambda function can trigger other lambda functions, 1 event = x functions if functions trigger other functions
+- Architecture can get extremely complicated, `AWS X-Ray` allows for debugging
+- Lambda can do things globally
+- **Know your triggers, esp in the us-east-1 region**
 
-# What is Lambda?
+<a name ="dns"></a>
+# Route53
+#DNS 101
+- Convert human friendly domain names into an Internet Protocol(IP) address
+- Last word represents top level domain
+- Top domain names are controlled by IANA(Internet Assigned Numbers Authority) in  a root zone db
+- **Domain Registrars**
+    - An authority that can assign domain names directly under 1 or more top-level domains.
+- **Start of Authority records**
+    - Stores information about name of the server, admin of the server, current version of data file, default no.of seconds 
+        for the ttl file on resource records, etc. 
+- **Name Server(NS) records**: 
+    - Used by top level domain servers to direct traffic to the content DNS containing authoritative records
+- **A records**: 
+    - Fundamental type of DNS record, and stands for "Address". A record is used by a computer to translate the name of the 
+        domain to IP address.
+- **TTL(Time to Live)**: 
+    - The length that a DNS record is cached on either the Resolving server or the users own  local PC is equal 
+        to the value of the TTL, the lower the ttl, the faster the changes to DNS records take to 
+        propagate throughout the internet
+- **CName(Canonical Name)**: Used to resolve one domain name from other
+- **Alias Records**:
+    - Used to map resource record sets in your hosted zone to elbs, cloudfront distributions,
+        or S3 buckets configured as websites
+    - Works like a CName,mapping one DNS to another, but a CNAME cannot be used for naked domain names(zone apex record),
+        eg: you cannot have a CNAME for http://acloud.guru, it must be either an A record or Alias.
+- **ELB's do not have a predefined IPv4 addresses, you resolve to them using a DNS name**
+- Difference between Alias record and CNAME, when you are making a request to Route53 for a DNS record you will be charged if 
+    using a CNAME, else if using an alias record you won't be charged
+- Always chose Alias record over a CNAME
+- You always need SOA(start of authority) record for any hosted zone in Route53
 
-- Data centres
-- Hardware
-- Assembly code/Protocols
-- High Level Languages
-- Operating Systems
-- Application Layer/AWS APIs
-- AWS Lambda
-
-# What Languages:
-
-- Node.js
-- Java
-- Python
-
-# How is Lambda priced:
-
-- Number of requests: First 1 million requests are free. $0.20 per 1 million requests thereafter
-- Duration: calculated from the time your code begins executing until it returns or otherwise terminates, rounded up to the nearest 100ms. The price depends on the amount of memory you allocate to your function. You are charged $0.00001667 for every GB-second used
-
-# Why Lambda?
-
-- No servers
-- Continuously scaling
-- Really cheap
-
-# Exam Tips for EC2:
-
-## Know the differences:
-
-- On demand
-- Spot
-- Reserved
-- Remember with spot instances
-  - If you terminate the instance, you pay for the hour
-  - If AWS terminates the spot instance, you get the hour t was terminated for free
-
-# Exam Tips for EBS:
-
-## EBS consists of:
-
-- General purpose SSD - GP2 - (up to 10,000 IOPS)
-- Provisioned IOPS SSD - IO1 - (more than 10,000 IOPS)
-- Magnetic- cheap, infrequently accessed storage
-- You cannot mount 1 EBS volume to multiple EC2 instances, instead use EFS
-- Remember the different EC2 instance types
-- Remember the acronyms for remembering the EC2 instance types D(Density).I(IOPS).R(RAM).T(cheap general purpose).M(main choice for general purpose apps).C(compute).G(graphics)
-- Termination protection is turned off by default, you must turn it on. On an EBS-backed instance, the default action is for the root EBS volume to be deleted when the instance is terminated.
-- Root volumes cannot be encrypted by default, you need a third party tool to encrypt the root volume
-
-# Volumes vs Snapshots
-
-- Volumes exist on EBS(Virtual Hard Disk)
-- Snapshots exist on S3
-- You can take a snapshot of a volume, this will store that volume on S3. These are point in time copies
-- Snapshots are incremental, this means that only the blocks that have changed since your last snapshot are moved to S3. It will take time to create a first snapshot
-- Snapshots of encrypted volumes are encrypted automatically
-- Volumes restored from encrypted snapshots are encrypted automatically.
-- We can share snapshots only if they are encrypted. These can be shared with other AWS accounts or you can make them public
-- In order to take a snapshot for Amazon EBS Volumes that serve as root devices, you should stop the instance before taking the snapshot
-
-# EBS vs Instance store:
-
-- Instance store volumes are called Ephemeral storage
-- Instance store volumes cannot be stopped. If the underlying host fails, you will lose your data
-- EBS backed instances can be stopped, you will not lose the data on this instance if it is stopped
-- You can reboot both, and you are not going to lose the data
-- By default both ROOT volumes will be deleted on termination, however with EBS volumes, you can tell AWS to keep the root device volume
-
-# How can I take a snapshot of a RAID array?
-
-- Problem: take a snapshot, the snapshot excludes the data held in the cache by applications and the OS. This tends not to matter on a single volume, however using multiple volumes in a RAID array, this can be problem due to interdependencies of the array. Solution is to take an application consistent snapshot.
-
-How to do it?
-
-- Stop the application from writing to the disk
-- Flush all caches to the disk
-
-   **How can we do this?**
-   
-  1. Freeze the filesystem
-  2. Unmount the RAID array
-  3. Shutting down the associated EC2 instance
-
-# Amazon Machine Images:
-
-AMI’s are regional, you can only launch an AMI from the region in which it is stored. 
-However you can copy AMI’s to other regions using the console, command line or the Amazon EC2 API
-
-# Cloudwatch:
-
-- Standard monitoring: 5 minutes
-- Detailed monitoring = 1min
-- CloudWatch is for performance monitoring
-- CloudTrail is for auditing
-- Create dashboards to see what is happening with your AWS environment.
-- Allows you to set alarms that notify you when certain thresholds are hit
-- CloudWatch events help you to respond to the state changes in your AWS resources
-- CloudWatch Logs help you to aggregate, monitor, and store logs 
-
-# Roles:
-
-- Are more secure than storing your access key and secret access key on individual EC2 instances
-- Are easier to manage
-- Roles can only be assigned when the EC2 instance is being provisioned
-- Are universal, you can use them in any region
-
-# Instance Meta-data:
-
-- Used to get information about an instance(such as public ip)
-- Command: curl http://169.254.169.254/latest/meta-data
-- No such thing as user data
-
-# Elastic File System:
-- Supports NFS version 4 protocol
-- You only pay for the storage you use(no pre-provisioning required)
-- Can scale up to the petabytes
-- Can support thousands of concurrent NFS connections
-- Data is stored across multiple AZ’s within a region
-- Read After Write consistency
-
-# What is Lambda?
-  Please read the definition for `Lambda` above
-
-# Building a Fault-Tolerant website
-
-## Setting up environment:
-1. IAM Role for S3Role for S3 Full access
-2. VPC will contain 2 security groups one will be a WebDMZ, and the second one will be a RDS one
-3. 2 S3 buckets, named `wordpresscode2016aniketacloudguru`, and `wordpressmedia2016aniketacloudguru` and CDN's were configured for both of them
-4. 1 CDN for `wordpressmedia2016aniketacloudguru`
-5. RDS instance, non-publicly accessible, and non-multiAZ , since I wanted this to be free
-6. 1 ELB with the Web-DMZ security group
-7. No Route 53 record(optional)
-8. set up a EC2 instance, installed wordpress on it, uploaded the code to S3. Link to blog: [WordPress](http://54.187.100.238/index.php/2016/08/27/welcome-to-aws-learnings/)
-
-## Automation and setting up AMI
+<a name ="route53_routing_policies"></a>
+# Route53 routing policies
+- Simple
+    - default routing policy when you create a new record set
+    - commonly used when you have a single resource that performs a given function for your domain, eg: having 1 server serving
+        all the content
+- Weighted
+- Latency
+- Failover
+- Geolocation
 
 # Advantages of Cloud
 - Trade capital expense for variable expense
