@@ -62,6 +62,17 @@ Following are the sequence of events:
     * [AMI Types](#ami_types)
 * [Load Balancer and HealthCheck Labs](#loadbalancer_healthcheck_lab)
 * [CloudWatch EC2](#cloudwatch)
+* [IAM Roles with EC2](#iam_with_ec2)
+* [EC2 Instance Metadata](#ec2-meta-data)
+* [Autoscaling](#autoscaling)
+* [EC2 Placement groups](#ec2_placement_groups)
+* [Elastic File System](#efs)
+* [AWS Lambda](#aws_lambda)
+    * [AWS Lambda Exam Tips](#aws_lambda_exam_tips)
+* [DNS](#dns)
+    * [Route53 Routing policies](#route53_routing_policies)  
+    * [DNS Exam Tips](#dns_exam_tips)  
+* [Databses 101](#databases)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -94,9 +105,7 @@ Following are the sequence of events:
             
         4. CloudFront: Part of the CDN, consisting of edge locations to cache your assets, like videos, large media
             files etc.
-            
-        5. Direct Connect: Connecting your office or physical data centers to AWS using a dedicated telephone line
-            
+
    3.   **Compute Elements**:
    
         1. EC2: Known as Elastic Cloud Compute, allowing one to provision instances inside your VPC, these are
@@ -1094,6 +1103,8 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 - Lambda can do things globally
 - **Know your triggers, esp in the us-east-1 region**
 
+[Back to Table of Contents](#toc)
+
 <a name ="dns"></a>
 # Route53
 #DNS 101
@@ -1126,16 +1137,46 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 - Always chose Alias record over a CNAME
 - You always need SOA(start of authority) record for any hosted zone in Route53
 
+[Back to Table of Contents](#toc)
+
 <a name ="route53_routing_policies"></a>
 # Route53 routing policies
-- Simple
-    - default routing policy when you create a new record set
-    - commonly used when you have a single resource that performs a given function for your domain, eg: having 1 server serving
+- **_Simple_**
+    - Default routing policy when you create a new record set
+    - Commonly used when you have a single resource that performs a given function for your domain, eg: having 1 server serving
         all the content
-- Weighted
-- Latency
-- Failover
-- Geolocation
+        
+- **_Weighted_**
+    - Split your traffic based on different weights assigned, eg: 10% traffic to us-east-1, and 90% to eu-west-1
+    
+- **_Latency_**
+    - Route traffic based on lowest latency for your end user
+    - To use latency-based routing you create a latency resource record set for the Amazon EC2 in each region. When Route53
+      receives a query, it will select latency resource record set for the region with the lowest latency
+
+- **_Failover_**
+    - Used when you want to create an active/passive set up
+    - Route53 will monitor the health of your primary site using a health check
+
+- **_Geolocation_**
+    - Route traffic as per geographical location of the user(location from which DNS queries originate)
+    - eg: requests from europe goto eu-east-2, and requests from us goto us-east-1
+
+[Back to Table of Contents](#toc)
+
+<a name ="dns_exam_tips"></a>
+**DNS-Exam Tips**
+- ELB's do not have a IPv4 addresses, you resolve to them using a DNS name
+- Understand difference between an Alias record and a CNAME
+- Given a choice, always choose Alias record over CNAME
+- Different routing policies 
+- Route53 support MX records
+- There is 50 domain names available by default, however it is a soft limit and can be raised by contacting AWS support.
+
+[Back to Table of Contents](#toc)
+
+<a name ="databases"></a>
+#Databases
 
 # Advantages of Cloud
 - Trade capital expense for variable expense
