@@ -73,6 +73,7 @@ Following are the sequence of events:
     * [Route53 Routing policies](#route53_routing_policies)  
     * [DNS Exam Tips](#dns_exam_tips)  
 * [Databses 101](#databases)
+* [Helpful Resources](#helpful)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -1176,8 +1177,74 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 [Back to Table of Contents](#toc)
 
 <a name ="databases"></a>
-#Databases
+# Databases
+- **_RDS_**
+    - OLTP(Online Transaction Processing) purposes
+    - SQL, MySQL, PostgreSQL, Oracle, Aurora, MariaDB
+    - DynamoDB - NoSQL
+- **_RedShift_**: OLAP(Online Analytics Processing)
+- **_DMS_**: Database Migration service
+- **_ElasticCache_**
+    - Deploy, operate, and scale an in-memory cache in the cloud
+    - Improves performance of apps by allowing to retrieve information from fast, managed, in-memory caches,
+      instead of relying entirely on slower disk-based databases
+    - Supports 2 open-source in-memory caching engines: Redis, Memcached     
 
+[Back to Table of Contents](#toc)
+
+<a name ="rds"></a>
+# Launching an RDS Instance - Lab
+- 2 separate security groups
+- To create a publicly accessible RDS instance, you should be opening up your RDS security group(port 3306)
+  to allow and trust any web server security group to be able to connect to it
+
+[Back to Table of Contents](#toc)
+
+<a name ="rds_backups_multiaz"></a>
+# RDS - Backups, Multi-AZ & Read replicas
+- 2 types of backups, automated and database snapshots
+- **_Automated backups_**
+    - Allow you to recover your database to any point in time within a "retention period"
+    - Retention period can be between 1 and 35 days
+    - Take full daily snapshots and will restore transaction logs
+    - When recovery is done, AWS will first choose the most recent daily backup, and then apply transaction logs relevant to 
+      that day
+    - Backups enabled by default, and are taken within  a defined window, due to which storage I/O may be suspended, and you
+      will observe increased latency  
+    - Data stored in S3, get free storage space equal to the size of your database
+- **_Snapshots_**
+    - User initiated
+    - Stored even after you delete rds instance
+- You can restore a full snapshot or a point in time
+- You can take snapshot and then decide to scale up by changing the storage type of the instance    
+- Whenever you restore a backup, or a snapshot, the restored version of the db will be a new rds instance with a new endpoint
+- **_Encryption_**
+    - Encryption at rest supported for MySQL, oracle, SQL Server, PostgreSQL & MariaDB
+    - Done using AWS Key Management Service(KMS)
+    - Once encrypted, data stored at rest in the underlying storage is encrypted, along with automated backups, snapshots,
+      read replicas
+    - Encrypting an existing db instance is not possible unless you create a new instance with encryption, and migrate the data
+- **_Multi AZ_**
+    - Used for recovery purposes only, not used for improving performance
+    - Allows you to have exact copy of your production db in another AZ
+    - AWS handles replication for you, writes to db are synchronized to your standby db
+    - In the event of planned maintenance, db instance failure, or an AZ failure, Amazon RDS will automatically failover to
+      the standby so that database operation resume quickly without administrative intervention         
+- **_Read Replicas_**
+    - Used for scaling and not disaster recovery!!!
+    - Must have automatic backups turn on
+    - 5 read replica copies of any database
+    - Can have read replicas of read replicas
+    - Each read replica has its own DNS endpoint
+    - Cannot have read replicas that have multi-az
+    - Can create read replica's of multi-az source db however
+    - can be promoted to be their own db
+    - cannot write to a read replica, READ only!!!
+- To have a push-button scaling or scaling on the fly, always choose dynamodb, usually you will need to have a bigger
+  instance size    
+         
+[Back to Table of Contents](#toc)
+   
 # Advantages of Cloud
 - Trade capital expense for variable expense
 - benefit from massive economies of scale
@@ -1262,3 +1329,11 @@ failure
 
 # VPC Peering
 - a simple connection between 2 VPCs that enables us to route traffic between them using private IPs
+
+<a name ="helpful"></a>
+# Other Helpful resources to study from:
+- A great talk by Rick Houlihan from Amazon, for [DynamoDb](https://www.youtube.com/watch?v=FNFRTnp9Qh4&lipi=urn%3Ali%3Apage%3Ad_flagship3_pulse_read%3Bj8oarHCeQOCnUV5R8ajrlg%3D%3D)
+- Dan-Claudiu Dragos shared his experience [here](https://www.linkedin.com/pulse/how-get-all-aws-certifications-asia-wong-chun-yin-cyrus-%E9%BB%83%E4%BF%8A%E5%BD%A5-/) 
+   on how he prepared for the AWS Solutions Architect Certifications in 7 days and succesfully passed it.
+-  [A curated list of AWS resources to prepare for the AWS Certifications](https://gist.github.com/leonardofed/bbf6459ad154ad5215d354f3825435dc)
+- [Open Guide for AWS](https://github.com/open-guides/og-aws)
