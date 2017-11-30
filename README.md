@@ -1215,6 +1215,12 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 - **_Snapshots_**
     - User initiated
     - Stored even after you delete rds instance
+    -  I/O operations are suspended while you take a database snapshot
+- In RDS when using multiple availability zones, you cannot use the secondary database as an independent read node    
+- Absolutely free of charge when replicating data from your primary RDS instance to your secondary RDS instance 
+- When you add a rule to an RDS security group you do not need to specify a port number or protocol
+- If you are using Amazon RDS Provisioned IOPS storage with MySQL and Oracle database engines 6TB is the maximum size
+  RDS volume you can have by default
 - You can restore a full snapshot or a point in time
 - You can take snapshot and then decide to scale up by changing the storage type of the instance    
 - Whenever you restore a backup, or a snapshot, the restored version of the db will be a new rds instance with a new endpoint
@@ -1242,9 +1248,95 @@ however using multiple volumes in a RAID array, this can be a problem due to int
     - cannot write to a read replica, READ only!!!
 - To have a push-button scaling or scaling on the fly, always choose dynamodb, usually you will need to have a bigger
   instance size    
-         
+- By default, the maximum provisioned IOPS capacity on an Oracle and MySQL RDS instance (using provisioned IOPS) is 30,000 IOPS.
 [Back to Table of Contents](#toc)
-   
+
+<a name ="dynamodb"></a>
+# DynamoDB
+- Fast, flexible NoSQL database service for application requiring single digit millisecond latency at any scale
+- Fully managed db, supporting both document and key-value data models
+- Stored on SSD
+- Spread across 3 geographically distinct data centres
+- **_Eventual Consistent Reads(Default)_**
+    - consistency across all copies of data is usually reached within a second
+    - repeating a read after a short time should return the updated data
+- **_Strongly Consistent Reads_**
+    - returns a result that reflects all writes that received a successful response prior to the read
+- **_Provisioned throughput capacity_**
+    - write throughput capacity $0.0065 per hour for every 10 units
+    - read throughput capacity $0.0065 per hour for every 50 units
+- Storage costs of $0.25Gb/month
+
+[Back to Table of Contents](#toc)
+
+<a name ="redshift"></a>
+# Redshift
+- Fast, powerful, fully-manged, petabyte-scale data warehouse service in the cloud
+- Start small with $0.25 per hour, with no upfront costs, and scale to a petabyte or more for $1000/TB/year
+- **_Configuration_**
+    - single node(160Gb)
+    - multi-node
+        - Leader node managing client connection and receives queries
+        - Compute node up to 128 nodes, store data, perform queries & computation
+- **_Columnar Storage_**
+    - Data stored in the form of columns instead of rows
+    - Ideal for data warehousing and analytics
+    - Columnar data being stored sequentially on the storage media, and since only columns involved in the queries
+        are processed, column based systems require fewer I/Os
+    - Data can be compressed due to data being similar in a column
+    - Doesn't require indexes, or materialized views, hence uses less space
+    - Automatically selects the compression scheme by sampling your data        
+- **_Massively Parallel Processing_**
+    - Automatically distributes data & query load across all nodes
+    - easy to add nodes to your warehouse, and enable fast query performance
+- **_Pricing_**
+    - Compute Node hours, billed per unit, per node per hour, eg: 3 node warehouse running persistently for a month would be
+        2160 instance hours, only compute nodes will incur charges
+    - Backup
+    - Data transfer
+- **_Security_**
+    - Encrypted in transit using SSL
+    - Encrypted at rest using AES-256
+    - By default takes care of key management
+- **_Availability_**
+    - 1 AZ
+    - can restore snapshots to new AZ's in the event of an outage    
+
+[Back to Table of Contents](#toc)
+
+<a name ="elasticache"></a>
+# Elasticache
+- deploy, operate, and scale an in-memory cache in the cloud
+- improves performance of web apps by retrieving information from fast, managed, in-memory caches instead of slower disk-based
+    databases
+- Types
+    - **_Memcached_**
+        - Memory object caching system
+        - Elasticache is protocol compliant with memcached
+    - **_Redis_**
+        - open-source, in-memory key-value store supporting data structures such as sets and lists
+        - supports Master/Slave replication and multi-AZ which can be used to achieve cross AZ redundancy
+- Elasticache is a good choice if your database is particularly read heavy and not prone to frequent changing
+- RedShift is a good answer if the reason your db is feeling stress is because mgmt. kept on running OLAP transactions
+
+[Back to Table of Contents](#toc)
+
+<a name ="aurora"></a>
+# Aurora
+- MySQL-compatible, relational db engine that combines speed and high-availability of high-end commercial databases
+- Provides 5 times better performance than MySQL
+- **_Scaling_**
+    - Start with 10Gb, scales in 10Gb increments to 64Gb
+    - Compute resources can scale upto 32vCPUs and 244Gb of memory
+    - 2 copies of data in each AZ, with minimum of 3 AZ, ideally 6 copies
+    - Transparently handle loss of 2 copies data without affecting database write availability & up to 3 copies without
+        affecting read availability
+    - data blocks & disks are continuously scanned for errors
+- **_Replicas_**
+    - Aurora replicas - can have 15 of them, if you loose primary aurora db for whatever reason, failover will automatically
+        appear to your aurora replica 
+    - MySQL Read Replicas - 5 of them
+                           
 # Advantages of Cloud
 - Trade capital expense for variable expense
 - benefit from massive economies of scale
