@@ -1336,7 +1336,33 @@ however using multiple volumes in a RAID array, this can be a problem due to int
     - Aurora replicas - can have 15 of them, if you loose primary aurora db for whatever reason, failover will automatically
         appear to your aurora replica 
     - MySQL Read Replicas - 5 of them
-                           
+
+[Back to Table of Contents](#toc)
+<a name ="vpc"></a>
+# Virtual Private Cloud(VPC)
+- virtual data centre in the cloud
+- a logically isolated section of AWS cloud where you can launch AWS resources in a virtual network you define
+- you have complete control over your virtual networking environment, including selection of your own IP address range,
+    creation of subnets, network access control lists, configuring route tables, and network gateways
+- 1 subnet = 1 AZ
+- security groups are stateful, network access control lists are stateless, i.e. with nacls we will need to open both inbound
+    and outbound ports for eg for port 80, but not with security groups    
+- subnets and ACLs provide much better security over your AWS resources
+- instances security groups, they span multiple AZs and hence can span multiple VPCs
+- subnet acls
+- default vs custom vpc
+    - default allows you to deploy immediately, user friendly
+    - all subnets have a route to the internet, do not get private subnets in default vpc
+    - each ec2 instance will has private and public IP address, in a custom vpc with a private subnet we won't get a public ip
+        address we only get a private address
+- VPC peering
+    - allows you to connect 1 vpc to another via direct connect route using private ip
+    - instances behave as if they were on the same private network
+    - peering possible with vpcs in the same aws account or in different aws accounts
+    - always a star configuration, 1 central VPC peers with 4 others. No transitive peering! 
+     
+
+ 
 # Advantages of Cloud
 - Trade capital expense for variable expense
 - benefit from massive economies of scale
