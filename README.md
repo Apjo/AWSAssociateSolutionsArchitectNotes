@@ -893,7 +893,8 @@ Finally we are down to the term `DR MC GIFT PX`
 **Volume vs snapshots - security**:
 - Snapshots of encrypted volumes are encrypted automatically
 - Volumes restored from encrypted snapshots are encrypted automatically
-- You can share snapshots, but only if they are unencrypted. These snapshots can be shared with other AWS accounts or made public
+- You can share snapshots, but only if they are unencrypted. These snapshots can be shared with other AWS accounts or
+    made public
 
 [Back to Table of Contents](#toc)
 
@@ -905,15 +906,15 @@ Finally we are down to the term `DR MC GIFT PX`
 - RAID 1: Mirrored, Redundancy
 - RAID 5: Good for reads, bad for writes, AWS does not recommend putting RAID 5 ever on EBS
 - RAID 10: Striped and Mirrored, Good redundancy, good performance
-- You will use RAID arrays on AWS when you are not getting the disc I/O when required. Add multiple volumes and create a RAID
-    array to give you the disc I/O you require, typically you will end up using RAID0 or RAID10
+- You will use RAID arrays on AWS when you are not getting the disc I/O when required. Add multiple volumes and create
+    a RAID array to give you the disc I/O you require, typically you will end up using RAID0 or RAID10
 
 <a name ="raid_snapshot"></a>
 **How do I take a snapshot of a RAID Array**:
 
 **Problem**: 
-Take a snapshot, the snapshot excludes data held in the cache by apps and the OS. This tends not to matter on a single volume,
-however using multiple volumes in a RAID array, this can be a problem due to interdependencies of the array.
+Take a snapshot, the snapshot excludes data held in the cache by apps and the OS. This tends not to matter on a single
+    volume, however using multiple volumes in a RAID array, this can be a problem due to interdependencies of the array.
 
 **Solution**: 
 - Take an application consistent snapshot
@@ -927,7 +928,8 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 
 <a name ="encrypted_root_vol_snapshot_lab"></a>
 # Encrypted Root device Volumes & Snapshots - Lab
-- To create a snapshot for an EBS volume that serve as root devices, you should stop the instance before taking the snapshot
+- To create a snapshot for an EBS volume that serve as root devices, you should stop the instance before taking the
+    snapshot
 - Snapshots of encrypted volumes are encrypted automatically
 - Volumes restored from encrypted snapshots are encrypted automatically
 - You can share share snapshots only if they are unencrypted, these snapshots can be shared with other AWS accounts,
@@ -970,8 +972,8 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 - All AMIs are categorized as either backed by Amazon EBS or backed by instance store
 - **_For EBS volumes_**: The root device for an instance launched from the AMI is an Amazon EBS volume created from an 
     Amazon EBS snapshot. If you need fast provisioning times we prefer EBS backed volumes.
-- **_For Instance store volumes_**: The root device for an instance launched from the AMI is an instance store volume created 
-    from a template stored in Amazon S3. It takes time to provision an instance store volume than a EBS volume.
+- **_For Instance store volumes_**: The root device for an instance launched from the AMI is an instance store volume
+    created from a template stored in Amazon S3. It takes time to provision an instance store volume than a EBS volume.
     This might take some time to provision.
 
 [Back to Table of Contents](#toc)
@@ -982,8 +984,8 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 - Instance store volumes cannot be stopped. If the underlying host fails, you will lose your data
 - EBS backed instances can be stopped. You will not lose the data on this instance if it is stopped
 - You can reboot both, you will not lose your data
-- By default, both ROOT volumes will be deleted on termination, however with EBS volumes, you can tell AWS to keep the root 
-  device volume
+- By default, both ROOT volumes will be deleted on termination, however with EBS volumes, you can tell AWS to keep the
+    root device volume
 
 [Back to Table of Contents](#toc)
 
@@ -1051,11 +1053,13 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 
 <a name ="efs"></a>
 # EFS(Elastic File System):
-- A file storage service for EC2 instances. A simple interface that allows you to create and quickly configure file systems
+- A file storage service for EC2 instances. A simple interface that allows you to create and quickly configure
+    file systems
 - Storage capacity is elastic, growing and shrinking automatically as you add and remove files,
     so your app has the storage it needs, when they need it
 - **_Supports NFS version v4_**
-- **_You only pay for the storage you use(no pre-provisioning required), not like EBS, we can just start putting files on it_**
+- **_You only pay for the storage you use(no pre-provisioning required), not like EBS,
+    we can just start putting files on it_**
 - **_Can scale up to petabytes_**
 - **_Supports thousands of concurrent NFS connections_**
 - **_Data is stored across multiple AZ’s within a region_**.
@@ -1133,8 +1137,8 @@ however using multiple volumes in a RAID array, this can be a problem due to int
     - Works like a CName,mapping one DNS to another, but a CNAME cannot be used for naked domain names(zone apex record),
         eg: you cannot have a CNAME for http://acloud.guru, it must be either an A record or Alias.
 - **ELB's do not have a predefined IPv4 addresses, you resolve to them using a DNS name**
-- Difference between Alias record and CNAME, when you are making a request to Route53 for a DNS record you will be charged if 
-    using a CNAME, else if using an alias record you won't be charged
+- Difference between Alias record and CNAME, when you are making a request to Route53 for a DNS record you will be
+    charged if using a CNAME, else if using an alias record you won't be charged
 - Always chose Alias record over a CNAME
 - You always need SOA(start of authority) record for any hosted zone in Route53
 
@@ -1144,16 +1148,16 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 # Route53 routing policies
 - **_Simple_**
     - Default routing policy when you create a new record set
-    - Commonly used when you have a single resource that performs a given function for your domain, eg: having 1 server serving
-        all the content
+    - Commonly used when you have a single resource that performs a given function for your domain,
+        eg: having 1 server serving all the content
         
 - **_Weighted_**
     - Split your traffic based on different weights assigned, eg: 10% traffic to us-east-1, and 90% to eu-west-1
     
 - **_Latency_**
     - Route traffic based on lowest latency for your end user
-    - To use latency-based routing you create a latency resource record set for the Amazon EC2 in each region. When Route53
-      receives a query, it will select latency resource record set for the region with the lowest latency
+    - To use latency-based routing you create a latency resource record set for the Amazon EC2 in each region.
+        When Route53 receives a query, it will select latency resource record set for the region with the lowest latency
 
 - **_Failover_**
     - Used when you want to create an active/passive set up
@@ -1207,10 +1211,10 @@ however using multiple volumes in a RAID array, this can be a problem due to int
     - Allow you to recover your database to any point in time within a "retention period"
     - Retention period can be between 1 and 35 days
     - Take full daily snapshots and will restore transaction logs
-    - When recovery is done, AWS will first choose the most recent daily backup, and then apply transaction logs relevant to 
-      that day
-    - Backups enabled by default, and are taken within  a defined window, due to which storage I/O may be suspended, and you
-      will observe increased latency  
+    - When recovery is done, AWS will first choose the most recent daily backup, and then apply transaction logs
+        relevant to that day
+    - Backups enabled by default, and are taken within  a defined window, due to which storage I/O may be suspended,
+        and you will observe increased latency  
     - Data stored in S3, get free storage space equal to the size of your database
 - **_Snapshots_**
     - User initiated
@@ -1223,19 +1227,21 @@ however using multiple volumes in a RAID array, this can be a problem due to int
   RDS volume you can have by default
 - You can restore a full snapshot or a point in time
 - You can take snapshot and then decide to scale up by changing the storage type of the instance    
-- Whenever you restore a backup, or a snapshot, the restored version of the db will be a new rds instance with a new endpoint
+- Whenever you restore a backup, or a snapshot, the restored version of the db will be a new rds instance with a new
+    endpoint
 - **_Encryption_**
     - Encryption at rest supported for MySQL, oracle, SQL Server, PostgreSQL & MariaDB
     - Done using AWS Key Management Service(KMS)
-    - Once encrypted, data stored at rest in the underlying storage is encrypted, along with automated backups, snapshots,
-      read replicas
-    - Encrypting an existing db instance is not possible unless you create a new instance with encryption, and migrate the data
+    - Once encrypted, data stored at rest in the underlying storage is encrypted, along with automated backups,
+        snapshots, read replicas
+    - Encrypting an existing db instance is not possible unless you create a new instance with encryption,
+        and migrate the data
 - **_Multi AZ_**
     - Used for recovery purposes only, not used for improving performance
     - Allows you to have exact copy of your production db in another AZ
     - AWS handles replication for you, writes to db are synchronized to your standby db
-    - In the event of planned maintenance, db instance failure, or an AZ failure, Amazon RDS will automatically failover to
-      the standby so that database operation resume quickly without administrative intervention         
+    - In the event of planned maintenance, db instance failure, or an AZ failure, Amazon RDS will automatically
+        failover to the standby so that database operation resume quickly without administrative intervention         
 - **_Read Replicas_**
     - Used for scaling and not disaster recovery!!!
     - Must have automatic backups turn on
@@ -1248,7 +1254,9 @@ however using multiple volumes in a RAID array, this can be a problem due to int
     - cannot write to a read replica, READ only!!!
 - To have a push-button scaling or scaling on the fly, always choose dynamodb, usually you will need to have a bigger
   instance size    
-- By default, the maximum provisioned IOPS capacity on an Oracle and MySQL RDS instance (using provisioned IOPS) is 30,000 IOPS.
+- By default, the maximum provisioned IOPS capacity on an Oracle and MySQL RDS instance (using provisioned IOPS) is
+    30,000 IOPS.
+
 [Back to Table of Contents](#toc)
 
 <a name ="dynamodb"></a>
@@ -1290,8 +1298,8 @@ however using multiple volumes in a RAID array, this can be a problem due to int
     - Automatically distributes data & query load across all nodes
     - easy to add nodes to your warehouse, and enable fast query performance
 - **_Pricing_**
-    - Compute Node hours, billed per unit, per node per hour, eg: 3 node warehouse running persistently for a month would be
-        2160 instance hours, only compute nodes will incur charges
+    - Compute Node hours, billed per unit, per node per hour, eg: 3 node warehouse running persistently for a month
+        would be 2160 instance hours, only compute nodes will incur charges
     - Backup
     - Data transfer
 - **_Security_**
@@ -1306,9 +1314,9 @@ however using multiple volumes in a RAID array, this can be a problem due to int
 
 <a name ="elasticache"></a>
 # Elasticache
-- deploy, operate, and scale an in-memory cache in the cloud
-- improves performance of web apps by retrieving information from fast, managed, in-memory caches instead of slower disk-based
-    databases
+- Deploy, operate, and scale an in-memory cache in the cloud
+- Improves performance of web apps by retrieving information from fast, managed, in-memory caches instead of slower
+    disk-based databases
 - Types
     - **_Memcached_**
         - Memory object caching system
@@ -1333,36 +1341,119 @@ however using multiple volumes in a RAID array, this can be a problem due to int
         affecting read availability
     - data blocks & disks are continuously scanned for errors
 - **_Replicas_**
-    - Aurora replicas - can have 15 of them, if you loose primary aurora db for whatever reason, failover will automatically
-        appear to your aurora replica 
+    - Aurora replicas - can have 15 of them, if you loose primary aurora db for whatever reason, failover will
+        automatically appear to your aurora replica 
     - MySQL Read Replicas - 5 of them
 
 [Back to Table of Contents](#toc)
+
 <a name ="vpc"></a>
 # Virtual Private Cloud(VPC)
-- virtual data centre in the cloud
-- a logically isolated section of AWS cloud where you can launch AWS resources in a virtual network you define
-- you have complete control over your virtual networking environment, including selection of your own IP address range,
+- Virtual data centre in the cloud
+- A logically isolated section of AWS cloud where you can launch AWS resources in a virtual network you define
+- You have complete control over your virtual networking environment, including selection of your own IP address range,
     creation of subnets, network access control lists, configuring route tables, and network gateways
 - 1 subnet = 1 AZ
-- security groups are stateful, network access control lists are stateless, i.e. with nacls we will need to open both inbound
-    and outbound ports for eg for port 80, but not with security groups    
-- subnets and ACLs provide much better security over your AWS resources
-- instances security groups, they span multiple AZs and hence can span multiple VPCs
-- subnet acls
-- default vs custom vpc
-    - default allows you to deploy immediately, user friendly
-    - all subnets have a route to the internet, do not get private subnets in default vpc
-    - each ec2 instance will has private and public IP address, in a custom vpc with a private subnet we won't get a public ip
-        address we only get a private address
+- Security groups are stateful, network access control lists are stateless, i.e. with nacls we will need to open both
+    inbound and outbound ports for eg for port 80, but not with security groups    
+- Subnets and ACLs provide much better security over your AWS resources
+- Instances security groups, they span multiple AZs and hence can span multiple VPCs
+- Subnet acls
+- Default vs custom vpc
+    - Default allows you to deploy immediately, user friendly
+    - All subnets have a route to the internet, do not get private subnets in default vpc
+    - Each ec2 instance will has private and public IP address, in a custom vpc with a private subnet we won't get a 
+        public ip address we only get a private address
 - VPC peering
-    - allows you to connect 1 vpc to another via direct connect route using private ip
-    - instances behave as if they were on the same private network
-    - peering possible with vpcs in the same aws account or in different aws accounts
-    - always a star configuration, 1 central VPC peers with 4 others. No transitive peering! 
-     
+    - Allows you to connect 1 vpc to another via direct connect route using private ip
+    - Instances behave as if they were on the same private network
+    - Peering possible with vpcs in the same aws account or in different aws accounts
+    - Always a star configuration, 1 central VPC peers with 4 others. No transitive peering! 
+- Whenever you create a new VPC AWS creates a default ACL, a default security group, and a route, but it won't create a
+    subnet, you will need to create one yourself
+- Always going to loose 5 ip addresses when you create a subnet, since those 5 are reserved by Amazon
+- You can have 1 NAT gateway for 1 custom vpc
+- Allowed to have 5 VPCs in a region
 
+[Back to Table of Contents](#toc)
+
+<a name ="nat_instances"></a>
+# NAT Instances 
+- When creating a NAT instance, disable source/destination check on the instance
+- NAT instance must be in a public subnet
+- There must be a route out of the private subnet to the NAT instance, in order for this to work
+- The amount of traffic that NAT instances can support depends on the instance size. If you are bottlenecking increase 
+    the instance size
+- You can create high availability using ASGs, multiple subnets in different AZs, and a script to automate failover
+- NAT instances are behind a security group
+
+[Back to Table of Contents](#toc)
+
+<a name ="nat_gateway"></a>
+# NAT Gateways 
+- Preferred by the enterprise
+- Scale automatically up to 10 Gbps
+- No need to patch
+- Not associated with security groups
+- Automatically assigned a public ip
+- Remember to update your route tables, when you provision a NAT gateway
+- 1 NAT gateway in 1 AZ is not good enough, you want them in multiple AZ to have some form of redundancy in case of a 
+    failure
+- No need to disable source/destination checks
+
+[Back to Table of Contents](#toc)
+
+<a name ="nacl_sg"></a>
+# Network Access Control Lists vs Security Groups 
+- Your vpc comes with a default network ACL, and by default allows all inbound and outbound traffic
+- When you first create a new network acl or a custom network acl, there will be no inbound and outbound traffic
+- Each subnet must be associated with a network acl, if you don't explicitly associate a subnet with a network acl, the 
+    subnet is automatically associated with the default network acl
+- You can associate a network ACL  with multiple subnets, however, a subnet can be associated with only 1 network ACL at
+    a time. When you associate a netowrk ACL with a subnet, the previous association is removed    
+- A network acl can be bound to only 1 vpc, it cannot span across multiple vpcs
+- Network ACls contain a numbered list of rules that is evaluated in order, starting with lowest numbered rule.
+    Rule 100 for IPv4,and rule 101 for IPv6
+- A subnet can be associated with 1 network access control list, but a network acl can be associated with multiple 
+    subnets, when you associate a network acl with a subnet the previous association is removed
+- Can be used to block specific ip addresses or ip ranges
+- A network ACL have separate inbound and outbound rules, each rule can either allow or deny traffic
+- Network ACLs are stateless; responses to allowed inbound traffic are subject to the rules for outbound traffic and
+    vice versa 
+
+[Back to Table of Contents](#toc)
+
+<a name ="alb"></a>
+# Application Load Balancer
+You will need atleast 2 public subnets to deploy ALB's 
+
+[Back to Table of Contents](#toc)
+
+<a name ="vpc_flow_logs"></a>
+# VPC Flow Logs
+- A feature that enables you to capture information about the IP traffic going to and from network interfaces in your
+    VPC
+- Flow log data is stored using Amazon CloudWatch logs. After you have created a flow log, you can view & retrieve its
+    data in Amazon CloudWatch Logs
+- A Flow log can be created at either the VPC, Subnet or Network Interface level
+- You cannot enable flow logs for VPCs that are peered with your VPC unless the peer VPC is in your account
+- you cannot tag a flow
+- After you have created a flow log you cannot change its configuration; eg. you cannot associate a different IAM role
+    with the flow log
+- Not all IP traffic is monitored
+    - traffic generated by instances when they contact the Amazon DNS server. 
+    - traffic generated from a windows instance for Amazon windows license activation
+    - traffic to and from 169.254.169.254 for instance metadata
+    - DHCP traffic
+    - traffic to the reserved IP addresses for the default VPC router      
  
+[Back to Table of Contents](#toc)
+
+<a name ="nat_vs_bastion"></a>
+# NAT vs Bastion
+- A NAT is used to provide internet traffic to EC2 instances in private subnets
+- A Bastion is used to securely administer EC2 instances in private subnets
+
 # Advantages of Cloud
 - Trade capital expense for variable expense
 - benefit from massive economies of scale
