@@ -1572,90 +1572,144 @@ You will need atleast 2 public subnets to deploy ALB's
     works best on particular devices 
 - Pay based on the minutes that you transcode and the resolution at which you transcode
 
-# Advantages of Cloud
-- Trade capital expense for variable expense
-- benefit from massive economies of scale
-- stop guessing about capacity
-- increase speed and agility
-- stop spending money running and maintaining data
-- go global in minutes
+[Back to Table of Contents](#toc)
+
+<a name ="api_gateway"></a>
+# API Gateway
+- A fully managed service that makes it easy for developers to publish, maintain, monitor, and secure APIs at any scale
+- Create API for apps to access data, business logic, or functionality from your back-end services, such as apps
+    running on EC2, code running on AWS Lambda, or any web app
+- Once **_API Caching_** is enabled it allows us to cache endpoint's response, reduce the number of calls to your endpoint,and
+    help improve the latency of the requests
+- When you enable caching for a stage, API gateway will cache response for a specified time-to-live(ttl) period, in secs.
+    API gateway then responds to the request by looking up the endpoint response from the cache instead of making a
+    request to your endpoint
+- Low cost and efficient
+- Scales effortlessly
+- Throttle requests to prevent attacks
+- connect to cloudwatch to log all requests
+- **_Cross-Origin Resource Sharing_**
+    - CORS is one way the server at other end can relax the same-origin policy
+    - CORS is a mechanism that allows restricted resources(e.g. fonts) on a web page to be requested from another
+        domain outside the domain from which the first resource was served
+
+[Back to Table of Contents](#toc)
+
+<a name ="kinesis"></a>
+# Kinesis
+- Streaming data
+    - data generated continuously by thousands of data sources, which typically send in data records simultaneously, and
+        in small sizes 
+- Kinesis is a platform on AWS to send your streaming data too. Kinesis makes it easy to load and analyze streaming data,
+    and also providing the ability for you to build your own custom applications for your business needs
+    - **_Kinesis streams_**
+        - consists of shards
+        - data capacity for your streams is a function of the number of shards that you specify for the stream. The
+            total capacity of the stream is the sum of the capacities of its shards
+        - data retained for 24hrs to 1 week
+    - **_Kinesis Firehose_**
+        - analyze data automatically using lambda without having to worry about consumers
+    - **_Kinesis Analytics_**
 
 # Overview of Security Processes
-- *Shared responsibility model*: AWS is responsible for Global Infrastructure but you are responsible for anything you put on the cloud
-- *IAAS*: Amazon EC2, S3, and Amazon VPC are under your control. 
-- *Managed services*: AWS is responsible for patching, antivirus etc. But you are responsible for account management and user access. 
-- *Storage decommissioning*: When a storage device has reached its end of useful life, Amazon will de-commission the resource to not expose consumer data
-- *Network Security*: You can connect to any AWS access point via HTTP using SSL, amazon also offers VPC which provides a private subnet within the AWS cloud
-- *Amazon Corporate segregation*: Logically, the AWS production network is segregated from the Amazon Corporate network by means of a complex set of network security/segregation device
-- will not permit IPSpoofing must request a vulnerability scans
-- *AWS Trusted Advisor*: Inspects your AWS environment and makes recommendations when opportunities may exist to save money, improve system performance, or close security gaps.
-- *Instance Isolation*: Different instances running on the same physical machine are isolated from each other via Xen hypervisor, AWS firewall resides between the virtual interface and 
-the physical network interface. The instances can be treated as if they are on separate physical hosts, and neighbors have no access to that instance other than any other host
-on the internet.
+- *Shared responsibility model*: 
+    - AWS is responsible for Global Infrastructure but you are responsible for anything you put on the cloud
+- *IAAS*: 
+    - Amazon EC2, S3, and Amazon VPC are under your control 
+- *Managed services*: 
+    - AWS is responsible for patching, antivirus etc. But you are responsible for account management and user access 
+- *Storage decommissioning*:
+    - When a storage device has reached its end of useful life, Amazon will de-commission the resource to not expose
+        consumer data
+- *Network Security*:
+    - You can connect to any AWS access point via HTTP using SSL, Amazon also offers VPC which provides a private subnet
+        within the AWS cloud
+- *Amazon Corporate segregation*:
+    - Logically, the AWS production network is segregated from the Amazon Corporate network by means of a complex set
+        of network security/segregation device
+    - Will not permit IPSpoofing must request a vulnerability scans
+- *AWS Trusted Advisor*:
+    - Inspects your AWS environment and makes recommendations when opportunities may exist to save money,
+        improve system performance, or close security gaps
+- *Instance Isolation*:
+    - Different instances running on the same physical machine are isolated from each other via Xen hypervisor,
+        AWS firewall resides between the virtual interface and the physical network interface
+    - The instances can be treated as if they are on separate physical hosts, and neighbors have no access to that
+        instance other than any other host on the internet
 - *Guest OS*: You have full root access over accounts, services, and applications, virtual instances controlled by you, AWS does not have access rights. As also provides 
 the ability to encrypt EBS volumes and their snapshots with AES-256
 - *Firewall*: Amazon EC2 provides a complete firewall solution; configured to be in a deny-all mode, customers must explicitly open the ports to allow inbound traffic
 - *Elastic Load Balancing*: SSL termination supported, allows you to identify the IP addresses of a client connecting to your servers.
 - *Direct Connect*: Bypass ISPs in your network path. 
 
-# AWS Risk and Compliance
-- AWS has a strategic business plan which includes risk identification and the implementation of controls to mitigate or manage risks
-- customers can request permission to conduct scans of their cloud infrastructure as long as they are limited to the customer's instances and do not violate
- the AWS acceptable policy
- 
-# Architecting for the AWS Cloud: Benefits
-- almost zero upfront infrastructure development
-- just-in-time infrastructure
-- more efficient resource utilization
-- usage-based costing
-- reduced time to market
-
-## Technical benefits of Cloud
-- automation - scriptable infrastructure
-- auto-scaling
-- proactive scaling
-- more efficient development lifecycle
-- improved testability
-- disaster recovery and business continuity
-- overflow traffic to the cloud
-
-- Be a pessimist when designing architectures in the cloud; assume things will fail. In other words, always design, implement and deploy for automated recovery from 
-failure
-
-- Decouple your components: build components that do not have tight dependencies on each other, so that one component dies/sleeps/busy then other components in the system
- are built so as to continue to work as if no failure is happening. Loose coupling isolates the various layers and components of your application so that each component
- interacts asynchronously with the others
-
-- Implement elasticity: can be implemented in 3 ways
-   1. proactive cyclic scaling: periodic scaling that occurs at fixed interval
-   2. proactive even scaling: scaling when you are expecting big surge of traffic requests due to a scheduled business event
-   3. Auto-scaling based on demand: using monitoring service, your system can send triggers to take appropriate actions
-
-- secure your application   
-
 # Consolidated Billing
-   We have a paying account, and this account is linked to separate AWS accounts such as test/dev, production and bank office accounts respectively.
-   Paying account is independent. It cannot access resources of other accounts. All linked accounts are independent. 
-   There is a limit of 20 linked accounts for consolidated billing
+- AWS Organizations
+    - An account management service that enables you to consolidate multiple AWS accounts into an organization that you
+        create and centrally manage
+    - Available in 2 sets
+        - Consolidated Billing
+            - We have a paying account, and this account is linked to separate AWS accounts for example test/dev, 
+                production and bank office accounts respectively.
+            - Paying account is independent. It cannot access resources of other accounts. 
+            - All linked accounts are independent. There is a limit of 20 linked accounts for consolidated billing
+            - One bill per AWS account
+            - Very easy to track charges and allocate costs
+            - volume pricing discount
+            - Always enable multi-factor authentication on root account
+            - Always use a strong and complex password on root account
+            - Paying account should be used for billing purposes only. Do not deploy resources in to paying accounts
+            - Allows you to get volume discounts on all your accounts 
+        - All Features
 
-## Advantages:
-- one bill per AWS account
-- very easy to track charges and allocate costs
-- volume pricing discount
-
+# Cross Account Access
+- Makes it easy for you to work within a multi-account AWS environment by making it easy for you to switch roles within
+    the AWS management console
+- you can sign in to the console with username/pwd and without having to reenter login information switch the console to
+    manage another AWS account
+    
 # Resource Groups and Tagging
 
 ## Tags
-- key value pairs attached to AWS resources
-- metadata
-- they can be inherited
+- Key value pairs attached to AWS resources
+- Metadata
+- Tags can be inherited
 
 ## Resource Groups
-- makes it easy to group your resources using the tags assigned to them. You can group resources that share one or more tags
-- they contain information such as: region, name, HealthChecks
+- Makes it easy to group your resources using the tags assigned to them.
+    You can group resources that share one or more tags
+- Contain information such as: region, name, HealthChecks
+- Also contain specific information for eg. for EC2 - public and private ip addresses, for ELB - port configurations 
 
 # VPC Peering
-- a simple connection between 2 VPCs that enables us to route traffic between them using private IPs
+- A simple connection between 2 VPCs that enables us to route traffic between them using private IPs
+- You can create a connection within your vpcs, or with a VPC in another AWS account within a **single region**
+- AWS uses existing VPC infrastructure to create a VPC peering, does not rely on gateway, or a VPN connection or on a 
+    separate piece of hardware
+- No single point of failure for communication or a bandwidth bottleneck
+- Transitive peering relationship not supported
+- Cannot create a VPC peering connection between VPCs that have matching or overlapping CIDR blocks
+    
+# Direct Connect
+- Makes it easy to establish a dedicated network connection from your premises to AWS
+- Makes it easy for establishing a private connection between AWS and your datacenter, office, or colocation
+    environment, which in many cases an reduce your network costs, increase bandwidth throughput, and provide a more
+    consistent network experience than Internet-based connections
+- Reduce costs
+- Increase reliability
+- Increase bandwidth
+- A VPN connection can be configured in minutes and are good solution for immediate need, and have low to modest
+    bandwidth requirements, and can tolerate the inherent variability in internet-based connectivity
+- AWS direct connect does not involve the Internet; instead it uses dedicated, private network connections between
+    your intranet and Amazon VPC
+- Uses Ethernet VLAN trunking(802.1Q)    
+- If you don't want your traffic to traverse the internet and increase reliability, lower costs etc. then you might want 
+    to use direct connect (available in 10 Gbps, 1Gbps, Sub 1 Gbps can be purchased from AWS direct connect partners),
+    but if you have an immediate need for a connection between your corporate headquarters and Amazon, and you need it 
+    encrypted, your best choice will be a VPN        
+
+# Security Token Service(STS)
+- grants users limited and temporary access to AWS resources
+- users can come from 3 different resources
 
 <a name ="helpful"></a>
 # Other Helpful resources to study from:
