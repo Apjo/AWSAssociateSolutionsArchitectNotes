@@ -90,7 +90,21 @@ Following are the sequence of events:
     * [Simple Queue Service(SQS)](#sqs)
     * [Simple Workflow Service(SWF)](#swf)
     * [Simple Notification Service(SNS)](#sns)
-* [Helpful Resources](#helpful)
+    * [Elastic Transcoder](#elastic_transcoder_svc)
+    * [API Gateway](#api_gateway)
+    * [Kinesis](#kinesis)
+* [Overview of Security Processes](#overview_security_process)
+* [Addtional Exam Tips](#exam_tips)
+    *[Consolidated Billing](#consolidated_billing)
+    *[Cross Account Access](#cross_account_access)   
+    *[Tagging](#tags)
+    *[Resource Groups](#resource_groups)
+    *[VPC Peering](#vpc_peering)
+    *[Direct Connect](#direct_connect)
+    *[Security Token Service](#sts)
+    *[Workspaces](#workspaces)
+    *[Elastic Container Service](#ecs)
+* [Other Helpful Resources- A must read!!](#helpful)
 
 <a name ="concepts_introduction"></a>
 # Concepts and Components:
@@ -183,22 +197,28 @@ Following are the sequence of events:
    
         1. Athena: SQL queries on S3. 
             
-        2. Kinesis: Is a fully-managed service for real-time processing of streaming data at massive scale. 
-            Can continuously change and store terabytes of data per hour from several sources such as website clickstreams, 
-            social media, location tracking event. With Kinesis client library ACL, we can build Amazon Kinesis apps, 
-            and use streaming data to power real time dashboards, generate alerts, 
-            implement dynamic pricing and advertising and more. We can emit data from Kinesis to other AWS services such as 
-            S3, redShift, Elastic MapReduce, and lambda.
+        2. Kinesis: 
+            - Is a fully-managed service for real-time processing of streaming data at massive scale. 
+            - Can continuously change and store terabytes of data per hour from several sources such as
+                website clickstreams, social media, location tracking event. 
+            - With Kinesis client library ACL, we can build Amazon Kinesis apps,
+                and use streaming data to power real time dashboards, generate alerts, implement dynamic pricing and
+                advertising or more
+            - We can emit data from Kinesis to other AWS services such as S3, redShift, Elastic MapReduce, and lambda
             
-        3. ElasticMapReduce(EMR): A web service that makes it easy to quickly and cost-effectively process vast amounts of data. 
-            Uses Hadoop, an open source framework to distribute your data and process across a resizeable cluster of 
-            Amazon EC2 instances. It can also run other distributed framework such as Spark and Presto. 
-            EMR is used in a variety of applications including log analysis, web-indexing, data warehousing, 
-            machine learning, financial analysis, scientific simulation, and Bioinformatics, 
-            customers launch millions of Amazon’s EMR clusters each year.
+        3. ElasticMapReduce(EMR): 
+            - A web service that makes it easy to quickly and cost-effectively process vast amounts of data. 
+            - Uses Hadoop, an open source framework to distribute your data and process across a resizeable cluster of 
+                Amazon EC2 instances.
+            - It can also run other distributed framework such as Spark and Presto. 
+            - EMR is used in a variety of applications including log analysis, web-indexing, data warehousing, 
+                machine learning, financial analysis, scientific simulation, and Bioinformatics, 
+                customers launch millions of Amazon’s EMR clusters each year
+            - Allows you root access(i.e. login via SSH)
             
-        4. Cloud Search / Elastic Search: Search engine for your website or your application, 
-            Cloud search is fully managed service provided by AWS, Elastic search uses open source framework
+        4. Cloud Search / Elastic Search: 
+            - Search engine for your website or your application, 
+            - Cloud search is fully managed service provided by AWS, Elastic search uses open source framework
             
         5. Data Pipeline: Allows to move data from one place to another
         
@@ -206,8 +226,10 @@ Following are the sequence of events:
              
    8.   **Security and Identity**:
    
-        1. IAM(Identity Access Management): Enables you to securely control access to AWS services and resources for your users
-            We can create and manage AWS users and groups and use permissions to allow and deny their access to AWS resources
+        1. IAM(Identity Access Management): 
+            - Enables you to securely control access to AWS services and resources for your users
+            - We can create and manage AWS users and groups and use permissions to allow and
+                deny their access to AWS resources
             
         2. Inspector: An agent to install on vms to inspect and does security reporting on whats going on
         
@@ -228,31 +250,38 @@ Following are the sequence of events:
         4. SWF(Simple Work Flow Service): Helps developers to build, run, and scale background jobs that have parallel 
             or sequential steps.
         
-        6. Elastic Transcoder: A media transcoding service in the cloud. Designed to be highly-scalable, easy to use in a 
-            cost-effective way for developers and businesses to convert or transcode media files from their source formats 
-            to version that will play on devices like smartphones, tablets etc.
+        6. Elastic Transcoder: 
+            - A media transcoding service in the cloud. 
+            - Designed to be highly-scalable, easy to use in a cost-effective way for developers and businesses to
+                convert or transcode media files from their source formats to version that will play on devices like
+                smartphones, tablets etc.
     
    10.	**Deployment and Management**:
 
-        1. CloudWatch: A monitoring service for AWS Cloud resources and the apps you run on AWS. 
-            Used for collecting and tracking metrics, collect and monitor log files, and set alarms. 
-            It can monitor AWS resources, such as EC2 instances, DynamoDB tables, and RDS DB instances, 
-            as well as custom metrics generated by your apps and services, and log any files your app generates. 
-            We can use it to gain system-wide visibility into resource utilization, app performance, 
-            and operational health.
+        1. CloudWatch: 
+            - A monitoring service for AWS Cloud resources and the apps you run on AWS
+            - Used for collecting and tracking metrics, collect and monitor log files, and set alarms
+            - It can monitor AWS resources, such as EC2 instances, DynamoDB tables, and RDS DB instances,
+                as well as custom metrics generated by your apps and services, and log any files your app generates 
+            - We can use it to gain system-wide visibility into resource utilization, app performance,
+                and operational health.
             
-        2. CloudTrail: A logging, and auditing service, a web service that records API call for your account
-            and deliver log files to you. We can get history of AWS API calls for your account, including calls made by 
-            AWS management console, SDKs, Command line tools, and high level AWS services such as AWS cloud formation.
+        2. CloudTrail: 
+            - A logging, and auditing service, a web service that records API call for your account 
+                and deliver log files to you.
+            - We can get history of AWS API calls for your account, including calls made by AWS management console,
+                SDKs, Command line tools, and high level AWS services such as AWS cloud formation
             
-        3. Cloud Formation: Gives developers, and sys admins an easy way to create and manage a collection of related 
-            AWS resources, provisioning and updating them in an orderly and predictable fashion.
+        3. Cloud Formation: 
+            - Gives developers, and sys admins an easy way to create and manage a collection of related AWS resources,
+                provisioning and updating them in an orderly and predictable fashion.
             
         4. OpsWorks: Automating deployments using chef.
         
         5. Config Manager: proactively monitor changes to your environment.
         
-        6. Service Catalog: Allows you as an enterprise to build out what it is that you authorize within your organization.
+        6. Service Catalog: 
+            - Allows you as an enterprise to build out what it is that you authorize within your organization.
         
         7. Trusted Advisor: tips on cost optimization, performance optimization, security fixes etc.
     
@@ -288,21 +317,25 @@ Following are the sequence of events:
         5. Rekognition
         
    17.  **Messaging**:
-        1. SNS(Simple Notification Service): A fast, flexible, fully-managed push messaging service,
-            makes it simple and cost-effective to push notifications to all mobile devices including Apple, Google, FireOS,
-            and Windows devices, and Android devices as well.  
-        2. SQS(Simple Queue Service): A fast reliable, scalable and fully-managed messaging queueing service. 
-            SQS makes it simple and cost-effective to decouple the components of a cloud application. 
-            We can use SQS to transmit any volume of data at any level of throughput, without losing messages or 
-            other services to be available.
-        3. SES(Simple Email Service): A cost-effective outbound only email sending service. 
-            We can send transactional emails,marketing messages etc, and get to pay for what we use. 
-            Along with high-deliverability SES provides, easy, real-time access to your sending statistics, 
-            and built-in notifications for bounces, complaints, and deliveries to help you find tune your 
-            cloud-based email sending strategy
+        1. SNS(Simple Notification Service): 
+            - A fast, flexible, fully-managed push messaging service, makes it simple and cost-effective to push
+                notifications to all mobile devices including Apple, Google, FireOS, and Windows devices,
+                and Android devices as well  
+        2. SQS(Simple Queue Service): 
+            - A fast reliable, scalable and fully-managed messaging queueing service. 
+            - SQS makes it simple and cost-effective to decouple the components of a cloud application. 
+            - We can use SQS to transmit any volume of data at any level of throughput, without losing messages or 
+                other services to be available.
+        3. SES(Simple Email Service): 
+            - A cost-effective outbound only email sending service. 
+            - We can send transactional emails,marketing messages etc, and get to pay for what we use. 
+            - Along with high-deliverability SES provides, easy, real-time access to your sending statistics, 
+                and built-in notifications for bounces, complaints, and deliveries to help you find tune your 
+                cloud-based email sending strategy
                                  
    After AWS resources are deployed we can update or modify in a controlled manner,
    and predictable way in effect applying version control to your AWS infrastructure.
+   **Amazon Web Services offer 3 different levels of support, namely Enterprise Business, and Developer**
    
 [Back to Table of Contents](#toc)
 
@@ -354,7 +387,7 @@ IAM consists of the following:
 - Policy documents
 - Root account has complete admin access when you first set up your AWS account
 - IAM does not apply to any region at this time
-- New users have no permissions, they have AccessKeyId, and secret access keys when they are first created
+- **New users have no permissions, they have AccessKeyId, and secret access keys when they are first created**
 - Access key ids and secret keys cannot be used as passwords to login to the console, we use them to access AWS via API or CLI
 - Set up MFA on root account, always
 - create and customize your own password rotation policies
@@ -367,7 +400,7 @@ IAM consists of the following:
 Imagine a user is at home, and he wants to login to the AWS console, and they are working on their own home network
 So they haven’t already signed-in into the work network.
 
-What they(users) would do is to browse to a URL, for eg: /ADFS/LS/IDPInitiatedSignOn, 
+What they(users) would do is to browse to a URL, for eg: /adfs/ls/IdpInitiatedSignOn, 
 and this is basically an ADFS server that sits inside a DMZ inside someone’s corporate network. 
 You browse to that link and it would give you a user name and password depending on your browser,
 but basically it prompts you to sign in using your active directory credentials. 
@@ -383,9 +416,9 @@ It is also known as Single-Sign On or SSO
 - This will login to the AWS Web console. 
 
 **Questions**:
-Can you authenticate with Active Directory: Yes, using SAML authentication
+1. Can you authenticate with Active Directory: Yes, using SAML(Secure Assertive Markup Language) authentication
 A: Whether or not you are authenticating to active directory first and then given a security credential or,
-if you get the temporary security credential first, which is then authenticated against the active directory?
+2. if you get the temporary security credential first, which is then authenticated against the active directory?
 A: You always authenticate against active directory first and then you would be assigned the temporary security credential
 
 [Back to Table of Contents](#toc)
@@ -1579,7 +1612,8 @@ You will need atleast 2 public subnets to deploy ALB's
 - A fully managed service that makes it easy for developers to publish, maintain, monitor, and secure APIs at any scale
 - Create API for apps to access data, business logic, or functionality from your back-end services, such as apps
     running on EC2, code running on AWS Lambda, or any web app
-- Once **_API Caching_** is enabled it allows us to cache endpoint's response, reduce the number of calls to your endpoint,and
+- Once **_API Caching_** is enabled it allows us to cache endpoint's response,
+    reduce the number of calls to your endpoint,and
     help improve the latency of the requests
 - When you enable caching for a stage, API gateway will cache response for a specified time-to-live(ttl) period, in secs.
     API gateway then responds to the request by looking up the endpoint response from the cache instead of making a
@@ -1611,43 +1645,57 @@ You will need atleast 2 public subnets to deploy ALB's
         - analyze data automatically using lambda without having to worry about consumers
     - **_Kinesis Analytics_**
 
+[Back to Table of Contents](#toc)
+
+<a name ="overview_security_process"></a>
 # Overview of Security Processes
-- *Shared responsibility model*: 
+- **_Shared responsibility model_**: 
     - AWS is responsible for Global Infrastructure but you are responsible for anything you put on the cloud
-- *IAAS*: 
+- **_IAAS_**: 
     - Amazon EC2, S3, and Amazon VPC are under your control 
-- *Managed services*: 
+- **_Managed services_**: 
     - AWS is responsible for patching, antivirus etc. But you are responsible for account management and user access 
-- *Storage decommissioning*:
+- **_Storage decommissioning_**:
     - When a storage device has reached its end of useful life, Amazon will de-commission the resource to not expose
         consumer data
-- *Network Security*:
+- **_Network Security_**:
     - You can connect to any AWS access point via HTTP using SSL, Amazon also offers VPC which provides a private subnet
         within the AWS cloud
-- *Amazon Corporate segregation*:
+- **_Amazon Corporate segregation_**:
     - Logically, the AWS production network is segregated from the Amazon Corporate network by means of a complex set
         of network security/segregation device
     - Will not permit IPSpoofing must request a vulnerability scans
-- *AWS Trusted Advisor*:
+- **_AWS Trusted Advisor_**:
     - Inspects your AWS environment and makes recommendations when opportunities may exist to save money,
         improve system performance, or close security gaps
-- *Instance Isolation*:
+- **_Instance Isolation_**:
     - Different instances running on the same physical machine are isolated from each other via Xen hypervisor,
         AWS firewall resides between the virtual interface and the physical network interface
     - The instances can be treated as if they are on separate physical hosts, and neighbors have no access to that
         instance other than any other host on the internet
-- *Guest OS*: You have full root access over accounts, services, and applications, virtual instances controlled by you, AWS does not have access rights. As also provides 
-the ability to encrypt EBS volumes and their snapshots with AES-256
-- *Firewall*: Amazon EC2 provides a complete firewall solution; configured to be in a deny-all mode, customers must explicitly open the ports to allow inbound traffic
-- *Elastic Load Balancing*: SSL termination supported, allows you to identify the IP addresses of a client connecting to your servers.
-- *Direct Connect*: Bypass ISPs in your network path. 
+- **_Guest OS_**: 
+    - You have full root access over accounts, services, and applications, virtual instances controlled by you,
+    - AWS does not have access rights.
+    - Provides the ability to encrypt EBS volumes and their snapshots with AES-256
+- **_Firewall_**:
+    - Amazon EC2 provides a complete firewall solution; configured to be in a deny-all mode,
+    - customers must explicitly open the ports to allow inbound traffic
+- **_Elastic Load Balancing_**: 
+    - SSL termination supported, allows you to identify the IP addresses of a client connecting to your servers.
+- **_Direct Connect_**: Bypass ISPs in your network path. 
 
+<a name ="exam_tips"></a>
+# Additional Exam Tips
+
+[Back to Table of Contents](#toc)
+
+<a name ="consolidated_billing"></a>
 # Consolidated Billing
 - AWS Organizations
     - An account management service that enables you to consolidate multiple AWS accounts into an organization that you
         create and centrally manage
     - Available in 2 sets
-        - Consolidated Billing
+        - **_Consolidated Billing_**
             - We have a paying account, and this account is linked to separate AWS accounts for example test/dev, 
                 production and bank office accounts respectively.
             - Paying account is independent. It cannot access resources of other accounts. 
@@ -1661,25 +1709,37 @@ the ability to encrypt EBS volumes and their snapshots with AES-256
             - Allows you to get volume discounts on all your accounts 
         - All Features
 
+[Back to Table of Contents](#toc)
+
+<a name ="cross_account_access"></a>
 # Cross Account Access
 - Makes it easy for you to work within a multi-account AWS environment by making it easy for you to switch roles within
     the AWS management console
 - you can sign in to the console with username/pwd and without having to reenter login information switch the console to
     manage another AWS account
+
+[Back to Table of Contents](#toc)
     
 # Resource Groups and Tagging
 
+<a name ="tags"></a>
 ## Tags
 - Key value pairs attached to AWS resources
 - Metadata
 - Tags can be inherited
 
+[Back to Table of Contents](#toc)
+
+<a name ="resource_groups"></a>
 ## Resource Groups
 - Makes it easy to group your resources using the tags assigned to them.
     You can group resources that share one or more tags
 - Contain information such as: region, name, HealthChecks
 - Also contain specific information for eg. for EC2 - public and private ip addresses, for ELB - port configurations 
 
+[Back to Table of Contents](#toc)
+
+<a name ="vpc_peering"></a>
 # VPC Peering
 - A simple connection between 2 VPCs that enables us to route traffic between them using private IPs
 - You can create a connection within your vpcs, or with a VPC in another AWS account within a **single region**
@@ -1688,7 +1748,10 @@ the ability to encrypt EBS volumes and their snapshots with AES-256
 - No single point of failure for communication or a bandwidth bottleneck
 - Transitive peering relationship not supported
 - Cannot create a VPC peering connection between VPCs that have matching or overlapping CIDR blocks
+
+[Back to Table of Contents](#toc)
     
+<a name ="direct_connect"></a>
 # Direct Connect
 - Makes it easy to establish a dedicated network connection from your premises to AWS
 - Makes it easy for establishing a private connection between AWS and your datacenter, office, or colocation
@@ -1707,10 +1770,148 @@ the ability to encrypt EBS volumes and their snapshots with AES-256
     but if you have an immediate need for a connection between your corporate headquarters and Amazon, and you need it 
     encrypted, your best choice will be a VPN        
 
-# Security Token Service(STS)
-- grants users limited and temporary access to AWS resources
-- users can come from 3 different resources
+[Back to Table of Contents](#toc)
 
+<a name ="sts"></a>
+# Security Token Service(STS)
+- Grants users limited and temporary access to AWS resources
+- Users can come from 3 different resources
+    - Federation
+        - Uses SAML(Security Assertion Markup Language)
+        - Grants temporary access based off the users Active directory credentials, does not need to be a user in IAM
+        - SSO allows users to log in to AWS console without assigning IAM credentials
+    - Federation with mobile apps
+        - Use facebook/google/Amazon or other openId providers to login
+    - cross account access
+        - Lets users from one AWS account access resources in another
+- Key terms
+    - **_Federation_**
+        - Combining or joining a list of users in one domain (such as IAM) with a list of users in another domain(such 
+            as Active directory, Facebook etc.)
+    - **_Identity broker_**
+        - A service that allows you to take an identity from point A to point B
+    - **_Identity Store_**
+        - Services like Active directory, Facebook etc.
+    - **_Identities_**
+        - A user service like Facebook etc.
+ - Scenario 
+    1. Users Login
+    2. Application calls identity broker that captures the username and password
+    3. Identity broker uses organization's LDAP directory to validate the employee's identity FIRST
+    4. The Identity broker calls GetFederationToken using IAM creds, call includes an IAM policy and a
+        duration(1-36 hours), alongwith the policy that specifies permissions granted to the temporary security credentials
+    5. STS confirms the policy of the IAM user making the call gives permissions to create new token, and returns
+        (access key, secret access key, a token and a duration)
+    6. Broker returns the temporary security creds to the reporting application
+    7. The data storage application uses the temporary security credentials(including the token) to make requests to S3
+    8. S3 uses IAM to verify that the credentials allow the requested operation on the given S3 bucket and key
+    9. IAM provides S3 with the go-ahead to perform the requested operation
+
+[Back to Table of Contents](#toc)
+
+<a name ="workspaces"></a>
+# Workspaces
+- A VDI, a cloud-based replacement for traditional desktop
+- Available as a bundle of compute resources, storage space, and storage application access that allow a user to
+    perform day-to-day tasks just like using a traditional desktop
+- A user cann connect to Workspace via any supported device, using a free Amazon WorkSpaces client application and creds
+    set up by the admin or their existing active directory creds
+- Windows 7 experience provided by Windows Server 2008 R2
+- By default users can personalize their workspaces with their favorite settings. This can be locked down by an admin
+- By default you will be given a local admin access, so you can install your own applications
+- Workspaces are persistent
+- All data on D:\ is backed up every 12 hours
+- You don't need a AWS account to login into Workspace
+                                 
+[Back to Table of Contents](#toc)
+
+<a name ="ecs"></a>
+# Elastic Container Service
+- **_Docker_**
+    - is a software platform to build, test and deploy apps quickly
+    - highly reliable; quickly deploy and scale apps into any environment and know your code will run
+    - infinitely scalable: running docker on AWS is a great way to run distributed applications at any scale
+    - docker packages software into standardized unit called containers, containers allow you to easily package an 
+        apps code, configs, and dependencies into easy to use building blocks that deliver environmental consistency,
+        developer productivity, and version control
+- **_Containerisation benefits_**
+    - escape from dependency hell
+    - consistent progression from dev -> test -> qa -> prod
+    - isolation , eg: performance issues in app A, will not affect app B
+    - much better resource management
+    - extreme code portability
+- **_Docker components_**
+    - **_Docker image_**
+        - A read-only template with instructions for creating a docker container
+        - Contains an ordered collection of root filesystem changes and the corresponding execution parameters for use
+            within a container runtime
+        - An image is created from a dockerfile, a plain text file that specifies the components that are to be included
+            in the container
+        - Images are stored in a registry, such as DockerHub, or AWS ECR    
+    - **_Docker container_**
+        - are a method of operating system virtualization that allow you to run an app and its dependencies in resource-
+            isolated processes
+        - Holds have everything that is needed for a software to run - including libraries, system tools, code, and
+            runtime
+        - created from a read-only template called an image    
+    - **_Layers/union file system_** 
+        - Docker images are read-only templates from which docker containers are launched, and
+            each image consists of a series of a layer, uses union file system to combine these layers into a
+            single image 
+    - **_Dockerfile_** 
+        - Images built from these images using simple set of instructions, each instruction creates a new layer
+            in our image, and these instructions are present in a docker file, docker reads this docker file when you
+            request a build in an image and then executes instructions and returns a final image
+    - **_Docker daemon / engine_** 
+        - Runs on linux in order to create a operating environment for your distributed application
+            the in-host daemon communicates with the docker client to execute commands to build ship and run containers
+    - **_Docker client_**
+        - interface between you and the dicker engine, allowing the creation, manipulation and deletion of docker
+            containers, and control of the docker daemon
+    - Docker registries: public/private stores of docker images
+- **_ECS_**
+    - A highly scalable, fast, container management service that makes it easy to run, stop, and manage docker containers
+        on a cluster of EC2 instances
+    - ECS lets you launch and stop container-based applications with simple API calls, allows you to get the state of
+        your cluster from a centralized service, and gives you access to many familiar EC2 features
+    - A regional service that you can use in 1 or more AZs across a new, or existing, VPC to schedule the placement
+        of containers across your cluster based on your needs
+    - Eliminates the needs for you to operate and manage your own cluster management and configuration management
+        systems, or scaling of your management infrastructure
+    - Can be used to create a consistent deployment and build experience, manage and scale batch and ETL workloads,
+        and build sophisticated app architectures on a microservices model
+    - A task definition is required to run docker containers in ECS
+    - task definitions are text files in JSON format that describe 1 or more containers that form your application
+    - ECS service allows you to run and maintain a specified number of instances of a task definition
+        simultaneously in an ECS cluster, think of services like auto-scaling group for ECS
+    - **_ECS cluster_**
+        - Logical grouping of container instances that you can place tasks on, a default cluster is created  when you 
+            first use ECS
+        - Clusters are region-specific
+        - May contain multiple different container instance types
+        - Container instances can only be a part of one cluster at a time
+        - Can create IAM policies for your clusters to allow or restrict users' access to specific cluster
+    - **_ECS Scheduler_**
+        - Services scheduler
+            - ensures that specified number of tasks are constantly running and reschedules tasks when a task fails
+            - ensure tasks are registered against an ELB
+        - Custom scheduler
+            - you can create your own schedulers that meet your business needs
+            - leverage 3rd party schedulers, such as Blox
+        - leverage the same cluster state information provided by the Amazon ECS API to make appropriate placement
+            decisions                    
+    - **_ECS Container Agent_**
+        - allows container instances to connect to your cluster, it is included in the ECS-optimized ami, but you can
+            install it on any EC2 instance that supports the ECS specification, only supported on EC2 instances,
+            not work with windows
+    - **_ECS Security_**
+        - EC2 instances use an IAM role to access ECS
+        - EC2 tasks use an IAM role to access services and resources
+        - Security group attach at the instance-level
+        - access and configure the OS of the EC2 instance in your ECS cluster
+
+[Back to Table of Contents](#toc)
+                                                     
 <a name ="helpful"></a>
 # Other Helpful resources to study from:
 - A great talk by Rick Houlihan from Amazon, for [DynamoDb](https://www.youtube.com/watch?v=FNFRTnp9Qh4&lipi=urn%3Ali%3Apage%3Ad_flagship3_pulse_read%3Bj8oarHCeQOCnUV5R8ajrlg%3D%3D)
