@@ -355,7 +355,18 @@ Allows us to manage users and their level of access to the AWS console.
 - supports compliance
 - A universally available service, not restricted to a particular region
 
+**IAM Elements**:
+- Principal: who is going to do the action, admin IAM is your first principal
+- Request: eg: create user, create EC2 instance, start or stop an EC2 instance
+- Authentication 
+- Authorization
+- Actions
+- Resources: entity thats exists within a service
+
 **High Level Concept**:
+- Access IAM via:
+    - AWS Console
+    - Programmatic access through SDKs, HTTPS API, and CLI(require Access Key and Secret)
 - User: An end user
 - Group: A collection of users under one set of permissions
 - Roles: Similar to a group, but you can assign both users and AWS resources(EC2).
@@ -379,6 +390,33 @@ Eg:
 - IAM users in another account
 - Application code running on EC2 instances needs access to other AWS services
 
+**Identity Federation**:
+- If your account users already have a way to be authenticated, such as through your corporate network
+    - you can federate those user identities in AWS
+    - A user logged in to the corporate network using their corporate identity 
+        - corporate can replace their existing identity with a temporary identity in your AWS account
+        - this user can work in the AWS console
+        - similarly the application the user is working on can make programmatic requests using permissions that you
+          define
+- When to use identity federation
+    1. Your users already have identities in a corporate directory
+        - If your corporate directory is SAML 2.0 compatible, you can configure your corporate directory to provide
+            Single-Sign on(SSO) to access teh AWS management console
+        - If your corporate directory is not compatible with SAML 2.0, you can create an identity broker application, to
+            provide SSO access to the AWS management console
+        - If your corporate directory is Microsoft Active directory, you can use AWS directory service to establish
+            trust between your corporate directory and AWS account
+    2. Your users already have internet identities
+        - If your mobile app or web-based app can let users identify themselves through an identity provider like
+            Amazon, Facebook, or Google, or any **OpenID Connect(OIDC)** compatible identity provider, the app can use
+            **web federation** to access AWS
+        - AWS recommends using AWS Cognito                        
+
+**IAM users and Single Sign-on(SSO)**:
+- IAM users in your account have access only to the AWS resources that you specify in the policy that is attached to the
+    user or to an IAM group that the user belongs to, for working in the console users must have permissions to perform
+    the actions that the console performs, such as listing and creating AWS resources
+
 **Summary**:
 IAM consists of the following:
 - Users
@@ -386,12 +424,25 @@ IAM consists of the following:
 - Roles
 - Policy documents
 - Root account has complete admin access when you first set up your AWS account
+- AWS strongly recommends that you do not use root user for your everyday tasks, even administrative ones 
 - IAM does not apply to any region at this time
 - **New users have no permissions, they have AccessKeyId, and secret access keys when they are first created**
 - Access key ids and secret keys cannot be used as passwords to login to the console, we use them to access AWS via API or CLI
 - Set up MFA on root account, always
-- create and customize your own password rotation policies
-- power user access allows access to all AWS resources except for mgmt of groups and users within IAM
+- Create and customize your own password rotation policies
+- Power user access allows access to all AWS resources except for mgmt of groups and users within IAM
+- Secure access to AWS resources for applications that run on EC2
+- Identity federation - users already having passwords get temporary access to your AWS account
+- Identity information for assurance - AWS CloudTrail provides information about who made requests for your resources
+- Payment Card Industry(PCI) Data Security Standard(DSS) compliance
+- Eventually consistent - achieves high availability by replicating data across multiple servers, but a change
+    committed must be replicated across IAM might take some time to be reflected
+    eg: creating or updating users, groups, roles or policies
+- Free to use, you will be only charged for the use of other AWS resources by your IAM users
+- Checks each policy that matches your context of request
+- By default it is an implicit deny(all requests are denied), explicit deny overrule any allows,
+    explicit allows overrides this default
+- Identity-based policies is not the way to provide cross-account access   
 
 [Back to Table of Contents](#toc)
 
