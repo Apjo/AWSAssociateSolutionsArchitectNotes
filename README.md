@@ -95,15 +95,15 @@ Following are the sequence of events:
     * [Kinesis](#kinesis)
 * [Overview of Security Processes](#overview_security_process)
 * [Addtional Exam Tips](#exam_tips)
-    *[Consolidated Billing](#consolidated_billing)
-    *[Cross Account Access](#cross_account_access)   
-    *[Tagging](#tags)
-    *[Resource Groups](#resource_groups)
-    *[VPC Peering](#vpc_peering)
-    *[Direct Connect](#direct_connect)
-    *[Security Token Service](#sts)
-    *[Workspaces](#workspaces)
-    *[Elastic Container Service](#ecs)
+    * [Consolidated Billing](#consolidated_billing)
+    * [Cross Account Access](#cross_account_access)   
+    * [Tagging](#tags)
+    * [Resource Groups](#resource_groups)
+    * [VPC Peering](#vpc_peering)
+    * [Direct Connect](#direct_connect)
+    * [Security Token Service](#sts)
+    * [Workspaces](#workspaces)
+    * [Elastic Container Service](#ecs)
 * [Other Helpful Resources- A must read!!](#helpful)
 
 <a name ="concepts_introduction"></a>
@@ -368,8 +368,12 @@ Allows us to manage users and their level of access to the AWS console.
     - AWS Console
     - Programmatic access through SDKs, HTTPS API, and CLI(require Access Key and Secret)
 - User: An end user
-- Group: A collection of users under one set of permissions
-- Roles: Similar to a group, but you can assign both users and AWS resources(EC2).
+- Group: A collection of users under one set of permissions, makes it easier to manage permissions for users. 300 groups
+    can be created at any given time, nesting of groups is not allowed. A user can be a member of upto 10 groups
+- Roles: Similar to a group, but you can assign both users and AWS resources(EC2). No password or access key is assigned
+    It is an identity with permission policies that determine what the identity can and cannot do in AWS. An IAM user
+    can assume a role to temporarily take on different permissions. An IAM Role can be assigned to a Federated user who
+    signs by using an external identity
 - Policies: document defining 1 or more permissions
 
 **Each Role has a policy template**.
@@ -381,6 +385,11 @@ More granular access depending on the resources required such as S3 access.
 
 **Configure IAM**:
 - root account gives you unlimited access to do things in the cloud
+- AWS provides a number of authentication mechanisms including a console, account Ids and secret keys,
+    X.509 certificates, and MFA devices
+- Console authentication is the most appropriate for administrative or manual activities
+- Account IDs and secret keys for accessing REST-based interfaces or tools
+- X.509 certificates for SOAP-based interfaces and tools
 - Multifactor authentication: Is simply where you have a second means to verify yourself when signing in.
 Since passwords can be compromised, with multi factor authentication is basically a second way of authenticating you.
 
@@ -417,7 +426,132 @@ Eg:
     user or to an IAM group that the user belongs to, for working in the console users must have permissions to perform
     the actions that the console performs, such as listing and creating AWS resources
 
+**IAM-Access Management**:
+- Helps you to define what a user or other entity is allowed to do in account, called as authorization
+- Permissions are granted through policies that are created and then attached to users, groups, or roles
+- By default a user cannot access anything
+- Users or groups can have multiple policies attached to them that grant different permissions
+- You can assign a role to a federated user
+- _Resource based policy_:
+    - You can assign a policy to a resource(eg: S3) in addition to attaching to a user or group, this is called as
+    resource-based policy, you specify what actions are permitted and hat resource is affected
+    - include the principal who is granted the permission
+
+**IAM Users**:
+- When you first create an AWS account, you first create an account(root user) which you use to sign in to AWS
+- You have complete unrestricted access to all the resources in your AWS account
+- Not possible to restrict the permissions that are granted to the AWS account
+- Create an IAM user for yourself and then assign yourself admin permissions for your account
+- IAM user with admin permissions is not the same thing as the AWS account root user
+- An IAM user is an entity that you create in AWS
+- IAM users are global entities, no region is required to be specified when you define user permissions
+- Each IAM user is associated with one and only one AWS account
+- A brand new IAM user has no permissions to do anything
+- You can grant user permissions by attaching IAM policies to them directly, or making them members of IAM groups
+- IAM user for a service that needs credentials to make requests to AWS is known as "service account"
+- You can have **5000** users, for more users make use of STS
+- When you create a user, you can identify them by either their names or ARN(arn:aws:iam::account-id-without-hyphens:user/Bob)
+- Create credentials or the user, depending on the type of access the user requires, i.e. programmatic or management console
+- When you create access key, IAM returns the access key ID and secret access key
+- You can give permissions to users to list, rotate and manage their own keys using an IAM policy
+
+**IAM Roles**:
+- a set of permissions that grants access to actions and resources in AWS
+- does not have a long term credentials associated with it
+- roles can be assumed by any one of the following:
+    - IAM user in the same account
+    - IAM user in a different account
+    - web service offered by AWS such as EC2
+    - federated user
+- **_Resource based policies_**
+    - specifies who can access the resource
+    - cross-account access with a resource-based policy has an advantage over a role, i.e. a user continues to have
+        access in the trusted account, and does not need to give their permissions in place of the role
+    - not all services support resource-based policies
+- **_IAM Service Roles_**
+    - A role that service assumes to perform actions on your behalf
+    - Must define a role for the service to assume
+    - Vary from service to service, but many allow you to choose your permissions
+    - Create, modify, and delete a service role from within IAM
+- **_IAM Role for EC2 instance_**
+    - when you launch an EC2 instance you can specify a role as a launch parameter
+    - IAM automatically provides temporary security credentials that are attached to the role, and then makes them
+        available for the EC2 instance to use on behalf of its applications
+    - the temporary security credentials are available on the instance and are rotated 5 minutes before the expiration
+    - for cases other than EC2 roles you need to request temporary credentials first
+    - Instance profile is required to assign an AWS role and its associated permissions to an EC2 instance, it contains
+        the role and can provide temporary credentials to an app that runs on the instance
+    - **only 1 role can be assigned to an EC2 instance**, and all the app on that instance share the same role and 
+        permissions
+    - ** Although a role is usually assigned to an EC2 instance when you launch it, a role can also be attached to an
+        EC2 instance that is already running**         
+- **_IAM Role Delegation_**
+    - is granting of permission to someone to allow access to resources that you control
+    - this involves setting up trust between the account that owns the resource(trusting account), and the account that
+        contains the users that need to access the resource(the trusted account)
+    - the accounts can be either be the same account, 2 accounts under the same org, 2 accounts owned by different orgs   
+    - to delegate  permission to access a resource, you can create an IAM role that has 2 policies attached
+        - **_Permission policy_** 
+            - Where the actions and resources the role can use are defined
+            - It grants the user of the role the needed permissions to carry out the intended tasks on the resource
+        - **_Trust policy_** 
+            - Specifies which trusted accounts are allowed to grant its users permissions to assume the role,
+            - The trusted entity is included in the policy as principal element in the document
+            - You cannot specify a wildcard(*) as a principal
+            - The trust policy on the role in the trusting account is 1 half of the permissions, the other half is a
+                permissions policy attached to the user in the trusted account that allows the user to switch to, or
+                assume the role           
+- **_IAM Role for Cross-Account Access_**
+    - To grant users access to resources from 1 account to another do not share credentials, access keys, instead use
+        IAM roles
+    - You can define a role in trusting account, that specifies what permissions the IAM users in the other accounts are
+        allowed
+    - In some web services you can attach a policy directly to a resource called as resource-based policies
+    - A user in 1 account can switch to a role in the same or different account
+        - While using the role the user can perform only the actions and access only the resources permitted by the
+            role; their original user permissions are suspended
+        - When the user exists the role, the original user permissions are restored
+        - Services that support resource-based policies are S3, SNS, SQS, Glacier vaults      
+    - When to use IAM users vs IAM Roles
+        - Use IAM user when:
+            - You created an AWS account and you are the only person who works in your account
+            - Other people in your group need to work in your AWS account, and your group is using no other identity
+                mechanism
+            - You want to use the AWS CLI
+        - Use IAM Role when:
+            - You are creating an app that runs on EC2 instances and that app makes requests to AWS
+            - You are creating an app that runs on a mobile phone and that makes requests to AWS
+            - Users in your company are authenticated in your corporate network and want to be able to use AWS without
+                having to sign in again      
+                       
+- **_Logging sign-in details in CloudTrail_**
+    - If you enable CloudTrail to log sign-in events to your log, you need to be aware of how CloudTrail chooses where
+        to log the events
+    - Users are redirected to either global or a regional sign-in endpoint, based on whether the selected service
+        console supports regions
+    - You can manually request a certain regional sign-in endpoint by signing in to the region-enabled main console home
+        page using a URL syntax like: https://alias.signin.aws.amazon.com/console?region=ap-southeast-1, AWS redirects
+        you to ap-southeast-1 regional sign-in endpoint         
+
+- **_IAM Best practices_**
+    1. Lock away your AWS account Root user access keys
+    2. Create individual IAM users
+    3. Use AWS defined policies to assign permissions whenever possible
+    4. Use groups to assign permissions to IAM users
+    5. Grant least privilege
+    6. Use access levels to review IAM permissions(AWS categorizes each service action into one of four access levels
+        based on what each action does: List, Read, Write, or Permissions management)
+    7. Configure a strong password policy
+    8. Enable MFA for privileged users
+    9. Use roles for applications that run on AWS EC2 instances
+    10. Delegate by using roles instead of sharing credentials
+    11. Rotate credentials  regularly
+    12. Remove unnecessary credentials
+    13. Use policy conditions for Extra security
+    14. Monitor Activity in your AWS account    
+    
 **Summary**:
+
 IAM consists of the following:
 - Users
 - Groups(group users and apply policies to them)
@@ -1825,7 +1959,20 @@ You will need atleast 2 public subnets to deploy ALB's
 
 <a name ="sts"></a>
 # Security Token Service(STS)
-- Grants users limited and temporary access to AWS resources
+- Grants trusted users limited and temporary access to AWS resources
+- To request temporary security credentials, use the AWS STS API actions
+- Available as a global service, all requests goto https://sts.amazonaws.com
+- You can optionally send your AWS STS requests to endpoints in any of the AWS regions
+- Temporary security credentials are supported in all regions
+- You cannot restrict the temporary security credentials to a particular region or subset of regions, except the
+    temporary security credentials from AWS GovCloud(US) and China(Beijing)
+- No matter which region your credentials come from they work globally
+- AWS STS endpoints are active by default in all regions and you can start using them without any further actions
+- When you activate a region for an account, you enable the STS endpoints in that region to issue temporary credentials
+    for users and roles in that account when a request is made to an endpoint in the region
+- When the credentials are created, they are associated with an IAM access control policy
+- Permissions assigned to temporary security credentials are evaluated each time a request is made that uses the
+    credentials
 - Users can come from 3 different resources
     - Federation
         - Uses SAML(Security Assertion Markup Language)
@@ -1833,7 +1980,7 @@ You will need atleast 2 public subnets to deploy ALB's
         - SSO allows users to log in to AWS console without assigning IAM credentials
     - Federation with mobile apps
         - Use facebook/google/Amazon or other openId providers to login
-    - cross account access
+    - Cross account access
         - Lets users from one AWS account access resources in another
 - Key terms
     - **_Federation_**
@@ -1845,6 +1992,64 @@ You will need atleast 2 public subnets to deploy ALB's
         - Services like Active directory, Facebook etc.
     - **_Identities_**
         - A user service like Facebook etc.
+
+- **_STS Access_**
+    - Access it via the STS API
+    - Can also use SDKs containing libraries and sample code
+    - Can use the AWS CLI or the Microsoft Powershell
+    - Cannot generate it through AWS Console
+     
+- **_EC2 Roles and STS_**
+    - A special type of service role that a service assumes to launch and Amazon EC2 instance that runs your app
+    - Automatically provides temporary security credentials that are attached to the role and then makes them
+        available for the EC2 instance
+    - For cases other than AWS EC2 roles, you need to request the temporary credentials first
+
+- **_STS API Actions_**
+    - AssumeRole
+        - Who can call? IAM user or user with existing temporary security credentials
+    - AssumeRoleWithSAML
+        - Who can call? Any user passing the SAML authentication response
+    - AssumeRoleWithWebIdentity
+        - Who can call? any user; caller must web identification token that indicates authentication from a known
+            identity provider
+    - GetSessionToken
+        - Who can call? IAM user or AWS account root user
+    - GetFederationToken
+        - Who can call? IAM user or AWS account root user
+    - Passed policy support
+        - Pass the IAM policy as a parameter to most of the AWS STS APIs to be used in conjunction with other policies
+            affecting the user to determine what the user is allowed to do with temporary credentials that result from
+            the API call, not supported by GetSessionToken
+    - MFA support
+        - Include info about MFA in AssumeRole and GetSessionToken APIs
+    - Default expiration of 1 hour for AssumeRole, AssumeRoleWithSAML, and AssumeRoleWithWebIdentity, and 12 hours for
+        GetSessionToken, and GetFederationToken, you can send the requested duration of the token, and this can be from
+        15 minutes to all the way to few hours 36 hours      
+
+- **_Assumed Role with Web Identity API_**
+    - Permission policy of the role that is being assumed determines the permissions for the temporary security
+        credentials returned by and AssumeRoleWithWebIdentity
+    - You can optionally pass in a separate policy to scope down the permissions assigned to the temporary security
+        credentials, cannot use the polciy to grant permissions that are in excess of those allowed by the permission
+        policy of the role
+     
+- **_Assumed Role with SAML 2.0 - AWS API_**
+    - SAML is a open standard for exchanging authentication and authorization data between security domains
+    - SAML 2.0 is an XML-based protocol that used security tokens containing assertions to pass information about a
+        principal
+    - SAML 2.0 enables web-based, cross-domain single-sign-on(SSO)
+    - Using SAML AWS enables federated single sign-on, which lets users sign into the AWS management console or make
+        programmatic calls to AWS API by using assertions from a SAML compliant identity provider(IdP) like ADFS
+    - Enterprise federation to AWS is possible using Windows Active Directory(AD), Active Directory Federation Services
+        (ADFS) 2.0, and SAML 2.0
+    - You need to configure trust on AWS side, you need:
+        - Create an IdP which is an XML metadata document from the IDP, that describes IdP and lists its capabilities
+        - Create an IAM role which will be assumed via AssumeRoleWithSAML, or you can also redirect all requests to SAML
+            sign in URL https://signin.aws.amazon.com/saml
+        - On the ADFS side you need to configure trust on AWS
+        -      
+                          
  - Scenario 
     1. Users Login
     2. Application calls identity broker that captures the username and password
