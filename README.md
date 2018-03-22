@@ -1589,6 +1589,11 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 - You have complete control over your virtual networking environment, including selection of your own IP address range,
     creation of subnets, network access control lists, configuring route tables, and network gateways
 - 1 subnet = 1 AZ
+- 1 VPC in 1 region
+- AWS client has full control over resources and virtual compute instances
+- Is similar to having your own data center
+- Logically isolated from other VPCs on AWS
+- You can have 1 or more IP addresses subnets in a VPC
 - Security groups are stateful, network access control lists are stateless, i.e. with nacls we will need to open both
     inbound and outbound ports for eg for port 80, but not with security groups    
 - Subnets and ACLs provide much better security over your AWS resources
@@ -1610,6 +1615,57 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 - You can have 1 NAT gateway for 1 custom vpc
 - Allowed to have 5 VPCs in a region
 
+[Back to Table of Contents](#toc)
+
+## Components of a VPC
+- Classless Inter Domain Router and IP address subnets eg. 10.0.0.0, 172.16.0.0/16, 192.168.0.0/16
+- **_Implied router_**
+    - No need to specify any configuration
+    - Is the central VPC routing function, does all the subnet to subnet routing within a VPC
+    - Connects the different AZ's together and connects the VPC to the Internet Gateway
+    - Each subnet will have a route table the router uses to forward traffic withing the VPC
+    - The route tables will also have entries to external destinations  
+- **_Route tables_**
+    - You can have up to 200 route tables per VPC
+    - You can have up to 50 routes entries per route table
+    - Each subnet MUST be associated with only 1 route table at any given time. 1 route table can be assigned to multiple
+        subnets, but 1 subnet cannot be attached to more than 1 route table at any given time
+    - If you do not specify a subnet-to-route-table association, the subnet will be associated with the default(main)
+        VPC route table
+    - You can also edit the main(default) route table, but you cannot delete the main(default) route table, however you
+        can make a custom route table manually become the main route table, then you can delete the former main, as it
+        is no longer a main route table
+    - **Every route table in a VPC comes with a default rule that allows all VPC subnets to communicate with one another**,
+        you cannot modify or delete this rule
+- **_Internet gateway_**
+    - Is the gateway through which your VPC communicates with the internet, and with other AWS services
+    - **Only 1 internet gateway per vpc**
+    - A horizontally scaled, redundant, and highly available VPC component
+    - Performs NAT(static one-to-one) between your private and public(or elastic) IPv4 addresses
+    - Supports both IPv4 and IPv6
+- **_Security groups_** - virtual firewalls - works at teh ENI level
+- **_Network Access Control Lists(N. ACLs)_** - works at the subnet level
+- **_Virtual Private gateway_**
+
+[Back to Table of Contents](#toc)
+
+## IPv6 Addressing
+- All IPv6 addresses are Public
+- Hence, AWS allocates the IPv6 address range if you require that
+- Once the VPC is created, you can NOT change its CIDR block range
+- If you need a different CIDR size, create a new VPC
+- The different subnets within a VPC can NOT overlap
+
+[Back to Table of Contents](#toc)
+
+## AWS Reserved IP's in each subnet
+- First 4 IP addresses in each subnet and the last one are reserved by AWS
+    - for example: if the subnet is 10.0.0.0/24
+    - 10.0.0.0 is the base network
+    - 10.0.0.1 VPC router
+    - 10.0.0.2 DNS related
+    - 10.0.0.3 Reserved for future use
+    - 10.0.0.255 last IP
 [Back to Table of Contents](#toc)
 
 <a name ="nat_instances"></a>
