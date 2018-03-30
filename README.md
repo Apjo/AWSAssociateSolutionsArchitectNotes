@@ -1617,6 +1617,19 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 
 [Back to Table of Contents](#toc)
 
+## VPC Types
+- A Default VPC
+    - created in each AWS region when an AWS account is created
+    - has default CIDR, Security group, N ACL, and route table settings
+    - has an internet gateway by default
+- A Custom VPC
+    - is a VPC created by the owner of the AWS account
+    - AWS user creating the custom VPC can decide the CIDR
+    - has its own default security group, N ACL, and route tables
+    - does not have an internet gateway by default, one needs to be created if needed
+
+[Back to Table of Contents](#toc)
+
 ## Components of a VPC
 - Classless Inter Domain Router and IP address subnets eg. 10.0.0.0, 172.16.0.0/16, 192.168.0.0/16
 - **_Implied router_**
@@ -1643,8 +1656,68 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
     - A horizontally scaled, redundant, and highly available VPC component
     - Performs NAT(static one-to-one) between your private and public(or elastic) IPv4 addresses
     - Supports both IPv4 and IPv6
-- **_Security groups_** - virtual firewalls - works at teh ENI level
-- **_Network Access Control Lists(N. ACLs)_** - works at the subnet level
+- **_Security groups_** 
+    - Virtual firewalls - works at the ENI level
+    - Controls traffic at the EC2 level, specifically at the ENI level
+    - Up to 5 security groups per EC2 instances interface can be applied
+    - **Stateful**, return traffic, of allowed inbound traffic, is allowed, even if there are no rules to allow it
+    - **Can only** have permit rules, **can NOT** have deny rules
+    - Implicitly deny rule at the end
+    - Security groups are associated with EC2 instances network interfaces
+    - All rules are evaluated to find a permit rule
+    - Any virtual server instance(EC2) created without specifying a security group for it(during its creation), will be
+        assigned the VPC default security group
+    - Each VPC created will have a default security group created for it, you can NOT delete a default security group
+    - Changes to security groups take effect immediately
+    - **Default or Custom Security groups - default settings**
+        - Default security group in a default or custom VPC, will have:
+            - Inbound rules allowing instances assigned the same security group to talk to one another
+            - All outbound traffic is allowed
+        - Custom(Non-default) security groups in a VPC will always have:
+            - No inbound rule - basically all inbound traffic is denied by default
+            - All outbound traffic is allowed by default
+    - **Security group configurations**
+        - You can use security group names as the source or destination in other security group rules
+        - You can use the security group name as the source in its own inbound security group rules
+        - Security groups are directional and can use allow rules only
+        - A security group set of rules ends with an implicit deny any
+        - To allow the EC2 instances assigned to a security group to communicate with one another,
+            - Create a security group, apply it to all these instances, and configure a rule that allows any traffic,
+                on any protocol/ports, the source of which is the security group itself
+            - Be cautious that the security group is a VPC resource, which means member EC2 instances can be from
+                different subnets and AZs too
+        - To allow all EC2 instances on a subnet to communicate with each other,
+            - Create a security group and apply it to those instances, and configure a rule that allows communication on
+                all protocols/ports, the source of which is the subnet CIDR block                          
+- **_Network Access Control Lists(N. ACLs)_** 
+    - N.ACL works at the subnet level
+    - A function performed on the implied router(implied VPC hosts the Network ACL function)
+    - N.ACL are Stateless. Outbound traffic for an allowed inbound traffic, must be "explicitly" allowed too
+    - N.ACL can have "permit" and "deny" rules
+    - N.ACL is a set of rules, each has a number
+    - N.ACL rules are checked for "permit" from lower numbered rules until either a permit is found, or an
+        explicit/implicit deny is reached
+    - You can insert rules(based on the configured rule number spacing) between existing rules, hence, it is recommended
+        to leave a number range between any 2 rules ot allow for edits later
+    - N.ACLs end with an **explicit deny** any, which you can NOT delete
+    - A subnet must be associated with a N.ACL, if you do not specify the N.ACL, the subnet will get associated with the
+        default N.ACL automatically
+    - You can create your own custom NACL, you do not have to use the default one
+    - A default N.ACL allows all traffic inbound and outbound
+    - A custom(non-default) N.ACL blocks/denies all traffic inbound and outbound by default
+    - **Things to remember!!!**
+        - If an instance in a VPC is unable to communicate over a certain protocol/port with another instance in the
+            same VPC, then the problem is the security settings of:
+                - Security group or NACL of the source instance, and/or
+                - Security group or NACL of the destination instance
+                    - The problem will never be routing table configuration, due to the default route entry
+        - Remember that N.ACLs are stateless, to allow certain traffic though it, it needs to be allowed(and return traffic)
+            in the inbound and outbound rules of the ACL
+        - Remember,
+            - Inbound in ACL means coming from outside the subnet destined to the subnet. Outbound means going out of the
+                subnet
+            - Inbound for security group means inbound from outside the instance destined to the instance. Outbound means
+                going out of the instance's ENI                                 
 - **_Virtual Private gateway_**
 
 [Back to Table of Contents](#toc)
@@ -1669,24 +1742,33 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 [Back to Table of Contents](#toc)
 
 <a name ="nat_instances"></a>
-# NAT Instances 
-- When creating a NAT instance, disable source/destination check on the instance
+# NAT Instances - Security Group configuration
 - NAT instance must be in a public subnet
+- NAT instances need to be assigned a security group
+- NAT instance is there to enable the private subnet EC2 instances to get to the internet
+- No traffic initiated from the internet can access the private subnet
+- Only admin SSH traffic can be allowed to the NAT instance(or RDP for Windows)
+- Private subnet EC2 instances need to access websites on the internet(HTTP or HTTPS)
+- NAT instance's security group must allow:
+    - traffic inbound from the private subnet or the private subnet's security group as a source on port 80(HTTP) and
+        443(HTTPS)
+    - traffic outbound to 0.0.0.0/0(Internet) on Ports 80 and 443
+    - traffic inbound from the customer's own network on port 22(SSH) to administer the NAT instance
+- When creating a NAT instance, disable source/destination check on the instance
 - There must be a route out of the private subnet to the NAT instance, in order for this to work
 - The amount of traffic that NAT instances can support depends on the instance size. If you are bottlenecking increase 
     the instance size
 - You can create high availability using ASGs, multiple subnets in different AZs, and a script to automate failover
-- NAT instances are behind a security group
+
 
 [Back to Table of Contents](#toc)
 
 <a name ="nat_gateway"></a>
 # NAT Gateways 
-- Preferred by the enterprise
-- Scale automatically up to 10 Gbps
-- No need to patch
-- Not associated with security groups
-- Automatically assigned a public ip
+- is an AWS managed service
+- No need to patch, AWS is responsible
+- Can Not be assigned a security group
+- Works only with elastic Ip, cannot not use a public ip to do its function
 - Remember to update your route tables, when you provision a NAT gateway
 - 1 NAT gateway in 1 AZ is not good enough, you want them in multiple AZ to have some form of redundancy in case of a 
     failure
@@ -1710,7 +1792,17 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 - Can be used to block specific ip addresses or ip ranges
 - A network ACL have separate inbound and outbound rules, each rule can either allow or deny traffic
 - Network ACLs are stateless; responses to allowed inbound traffic are subject to the rules for outbound traffic and
-    vice versa 
+    vice versa
+- N.ACL is the subnet guard and the first line of defense
+- Security group is the instance guard and the second line of defense(defense in depth)
+- They both work together to secure your hosted environment
+- It is also highly recommended to use your own application security means(firewalling) to add a deeper layer to
+    your application security
+- Changes made to NACLs(or Security groups) take effect immediately, so they are both quick to activate/defend as
+    needed
+- NACLs can help you block certain ranges of IP address from a large pool(Internet addresses for instance),
+    because they do have deny rules. Security groups can NOT block a certain range of IP addresses from Internet
+    from getting to your EC2 fleet of instances  
 
 [Back to Table of Contents](#toc)
 
