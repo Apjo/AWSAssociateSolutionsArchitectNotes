@@ -1832,6 +1832,41 @@ You will need atleast 2 public subnets to deploy ALB's
  
 [Back to Table of Contents](#toc)
 
+<a name ="vpc_peering"></a>
+# VPC Peering
+- A networking connection between 2 VPCs that enable you to route traffic between them using private IPv4 addresses or 
+    IPv6 addresses
+- Instances in either VPC can communicate with each other as if they are within the same network
+- Can create a VPC peering connection between your own VPCs, or with a VPC in another AWS account within a single region
+- AWS uses existing infrastructure of a VPC to create VPC peering connection, no gateway, no VPN, and does not rely on
+    separate piece of physical hardware
+- No single point of failure for communication or a bandwidth bottleneck
+- To establish a VPC peering connection, you do the following:
+    - The owner of the requester VPC(or local VPC) sends a request to the owner of the peer VPC to create the VPC
+        peering connection. The peer VPC can be owned by you, or another AWS account, and cannot have a CIDR block that
+        overlaps with the requester VPC's CIDR block
+    - The owner of the peer VPC accepts the VPC peering connection request to activate the VPC peering connection
+    - To enable the flow of traffic between the peer VPCs using private IP addresses, add a route to one or more of your
+        VPC's route table that points to the IP address range of the peer VPC. The owner of the peer VPC adds a route to
+        one of their VPC route tables that points to the IP address range of your VPC
+    - If required, update the security group rules that are associated with your instances to ensure that traffic to and 
+        from the peer VPC is not restricted
+    - A VPC peering connection is a one-to-one relationship between 2 VPCs. You can create multiple VPC peering
+        connections for each VPC that you own
+    - Transitive peering relationships are not supported: you do not have any peering relationship with VPCs that your
+        VPC is not directly peered with
+- **_ Direct Connect & VPC peering edge to edge routing_**
+    - VPC peering does not support edge-to-edge routing
+- **_Limitations of VPC peering_**
+    - You cannot create a VPC peering connection between VPCs that have matching or overlapping IPv4 or IPv6 CIDR blocks
+    - You cannot create a VPC peering connection between VPCs in different regions
+    - You have a limit on the number of active(50) and pending(25) VPC peering connections that you can have per VPC
+    - VPC peering does not support transitive peering relationships
+    - You cannot have more than 1 VPC peering connection between the same 2 VPCs at the same time
+    - A placement group can span peered VPCs
+    - Unicast reverse path forwarding in VPC peering connections is not supported
+    
+
 <a name ="nat_vs_bastion"></a>
 # NAT vs Bastion
 - A NAT is used to provide internet traffic to EC2 instances in private subnets
