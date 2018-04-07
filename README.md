@@ -1773,6 +1773,7 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 - 1 NAT gateway in 1 AZ is not good enough, you want them in multiple AZ to have some form of redundancy in case of a 
     failure
 - No need to disable source/destination checks
+- You can have up to 5 NAT gateways per AZ
 
 [Back to Table of Contents](#toc)
 
@@ -1810,6 +1811,47 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 # Application Load Balancer
 You will need atleast 2 public subnets to deploy ALB's 
 
+[Back to Table of Contents](#toc)
+
+<a name="vpc_wizard"></a>
+# VPC Wizard
+- If a VPC is created with a VPC wizard with private and public subnet options, you get
+    - By default, a public subnet associated with a custom route table
+    - By default, a private subnet associated with a main route table
+    - An IGW created and attached to the VPC
+    - By default the wizard will prefer to create a NAT gateway for your VPC, but you have the option to choose a NAT
+        instance instead
+    - If you choose to launch the NAT instance, the wizard will not allow you to go for less than a M1 small instance
+    - Main(default) VPC route table is assigned to the private subnet, it has the VPC local subnets routing entry, and
+        an entry 0.0.0.0/0 pointing at the NAT instance/gateway
+    - Custom route table will have an entry 0.0.0.0/0 pointing to IGW as a target
+    - Note that, creating a VPC creates route tables and not routing instances
+- Deleting a VPC with NAT instances
+    - A VPC with instances created within,can NOT be deleted unless the user manually terminates those instances
+    - In case of a VPC Wizard created VPC with public and private subnets, either a NAT gateway or a NAT instances must 
+        be created by the wizard(default is NAT gateway but the user can change that) If NAT instance is created, it has
+        to be terminated before you can delete the VPC     
+- **_VPC Wizard - Public and VPN only subnet_**
+    - Wizard created VPC with public and VPN-only subnets does NOT have a NAT instance or NAT gateway
+    - Wizard created VPC will have:
+        - Main(default) VPC route table associated with the VPN-only subnet
+        - Custom route table associated with the public subnet and pointing at the VPC IGW
+        - An IGW created for the VPC
+        - VGW with a VPN connection
+        - Route propagation enabled for the Main route table for exchanging routes with the VGW dynamically
+- **_Routing to On-premise network_**
+    - A public and VPN-only subnets created by the VPC Wizard refers to the fact no NAT instance(or gateway) will be
+        created as part of the wizard configuration. VPN only means a subnet that does not require access to the
+        internet
+    - VPC's main route table is associated with the VPN-only subnet(private subnet)
+    - VPC's custom route table is associated with the public subnet
+    - VGW is the gateway the main table refers to for access to customer premise/data center
+- **_VPC Wizard - VPN only and HW VPN_**
+    - No public subnet
+    - No NAT instance/gateway
+    - It will create a Virtual Private Gateway(VGW) but without an elastic ip
+    - It will create a VPN connection 
+    
 [Back to Table of Contents](#toc)
 
 <a name ="vpc_flow_logs"></a>
