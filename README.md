@@ -1755,6 +1755,7 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
     - traffic outbound to 0.0.0.0/0(Internet) on Ports 80 and 443
     - traffic inbound from the customer's own network on port 22(SSH) to administer the NAT instance
 - When creating a NAT instance, disable source/destination check on the instance
+- We can change the source/destination check when an instance is running or stopped
 - There must be a route out of the private subnet to the NAT instance, in order for this to work
 - The amount of traffic that NAT instances can support depends on the instance size. If you are bottlenecking increase 
     the instance size
@@ -1859,7 +1860,6 @@ You will need atleast 2 public subnets to deploy ALB's
     - VPC peering does not support edge-to-edge routing
 - **_Limitations of VPC peering_**
     - You cannot create a VPC peering connection between VPCs that have matching or overlapping IPv4 or IPv6 CIDR blocks
-    - You cannot create a VPC peering connection between VPCs in different regions
     - You have a limit on the number of active(50) and pending(25) VPC peering connections that you can have per VPC
     - VPC peering does not support transitive peering relationships
     - You cannot have more than 1 VPC peering connection between the same 2 VPCs at the same time
