@@ -20,7 +20,7 @@ Following are the sequence of events:
     4.  2010, All of Amazon moved to the AWS platform
     5.  2012, First re:invent
     6.  2013, Certifications
-    7.  2014, Committed to aachieve 100%  renewable enery usage
+    7.  2014, Committed to achieve 100% renewable energy usage
     8.  2015, Revenue hits a new high of USD $6 billion per year
     9.  2016, Run rate of $13 billion
 
