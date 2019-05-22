@@ -20,7 +20,7 @@ Following are the sequence of events:
     4.  2010, All of Amazon moved to the AWS platform
     5.  2012, First re:invent
     6.  2013, Certifications
-    7.  2014, Committed to aachieve 100%  renewable enery usage
+    7.  2014, Committed to achieve 100% renewable energy usage
     8.  2015, Revenue hits a new high of USD $6 billion per year
     9.  2016, Run rate of $13 billion
 
@@ -1844,8 +1844,8 @@ You will need atleast 2 public subnets to deploy ALB's
     - A public and VPN-only subnets created by the VPC Wizard refers to the fact no NAT instance(or gateway) will be
         created as part of the wizard configuration. VPN only means a subnet that does not require access to the
         internet
-    - VPC's main route table is associated with the VPN-only subnet(private subnet)
-    - VPC's custom route table is associated with the public subnet
+    - VPC's **main route table** is **associated with the VPN-only subnet(private subnet)**
+    - VPC's **custom route table** is **associated with the public subnet**
     - VGW is the gateway the main table refers to for access to customer premise/data center
 - **_VPC Wizard - VPN only and HW VPN_**
     - No public subnet
