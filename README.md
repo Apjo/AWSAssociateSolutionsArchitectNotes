@@ -62,12 +62,14 @@ and one taught by [Eissa](https://www.udemy.com/aws-certified-solutions-architec
     * [Elasticache](#elasticache)
     * [Aurora](#aurora)
 * [Virtual Private Cloud](#vpc)
-* [NAT](#nat_instances)
-    * [NAT Gateway](#nat_gateway)
-    * [Network Access Control Lists and Security Groups](#nacl_sg)
-    * [Application Load Balancers](#alb)
-    * [VPC Flow Logs](#vpc-flow-logs)
-    * [NAT vs Bastion](#nat-vs-bastion)
+    * [VPC Components](#vpc_compo)
+    * [IP V6](#ip_v6)
+    * [NAT](#nat_instances)
+        * [NAT Gateway](#nat_gateway)
+        * [Network Access Control Lists and Security Groups](#nacl_sg)
+        * [Application Load Balancers](#alb)
+        * [VPC Flow Logs](#vpc-flow-logs)
+        * [NAT vs Bastion](#nat-vs-bastion)
 * [Application Services](#application-services)
     * [Simple Queue Service(SQS)](#sqs)
     * [Simple Workflow Service(SWF)](#swf)
@@ -1569,15 +1571,14 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 
 <a name ="vpc"></a>
 # Virtual Private Cloud(VPC)
-- Virtual data centre in the cloud
-- A logically isolated section of AWS cloud where you can launch AWS resources in a virtual network you define
+- Virtual data centre in the cloud, similar to having your own data center, and **logically isolated from other VPCs on AWS**
+- You can launch AWS resources in a virtual network you define
 - You have complete control over your virtual networking environment, including selection of your own IP address range,
     creation of subnets, network access control lists, configuring route tables, and network gateways
-- 1 subnet = 1 AZ
-- 1 VPC in 1 region
+- **1 VPC in 1 region, or to simply put a vpc is always region specific**
+- **1 subnet = 1 AZ, or simply put a subnet cannot span multiple AZs**
+- A VPC can span multiple subnets
 - AWS client has full control over resources and virtual compute instances
-- Is similar to having your own data center
-- Logically isolated from other VPCs on AWS
 - You can have 1 or more IP addresses subnets in a VPC
 - Security groups are stateful, network access control lists are stateless, i.e. with nacls we will need to open both
     inbound and outbound ports for eg for port 80, but not with security groups    
@@ -1615,10 +1616,11 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 
 [Back to Table of Contents](#toc)
 
+<a name ="vpc_compo"></a>
 ## Components of a VPC
-- Classless Inter Domain Router and IP address subnets eg. 10.0.0.0, 172.16.0.0/16, 192.168.0.0/16
+- **_Classless Inter Domain Router(CIDR) and IP address subnets_** eg. 10.0.0.0, 172.16.0.0/16, 192.168.0.0/16
 - **_Implied router_**
-    - No need to specify any configuration
+    - No need to specify any configuration, AWS handles it all!
     - Is the central VPC routing function, does all the subnet to subnet routing within a VPC
     - Connects the different AZ's together and connects the VPC to the Internet Gateway
     - Each subnet will have a route table the router uses to forward traffic withing the VPC
@@ -1626,8 +1628,8 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 - **_Route tables_**
     - You can have up to 200 route tables per VPC
     - You can have up to 50 routes entries per route table
-    - Each subnet MUST be associated with only 1 route table at any given time. 1 route table can be assigned to multiple
-        subnets, but 1 subnet cannot be attached to more than 1 route table at any given time
+    - **Each subnet MUST be associated with only 1 route table** at any given time. **1 route table can be assigned to multiple
+        subnets**, but 1 subnet cannot be attached to more than 1 route table at any given time
     - If you do not specify a subnet-to-route-table association, the subnet will be associated with the default(main)
         VPC route table
     - You can also edit the main(default) route table, but you cannot delete the main(default) route table, however you
@@ -1642,9 +1644,9 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
     - Performs NAT(static one-to-one) between your private and public(or elastic) IPv4 addresses
     - Supports both IPv4 and IPv6
 - **_Security groups_** 
-    - Virtual firewalls - works at the ENI level
+    - Virtual firewalls - **works at the `Elastic Network Interface(ENI)` level**
     - Controls traffic at the EC2 level, specifically at the ENI level
-    - Up to 5 security groups per EC2 instances interface can be applied
+    - Up to 5 security groups per EC2 instances interface   be applied
     - **Stateful**, return traffic, of allowed inbound traffic, is allowed, even if there are no rules to allow it
     - **Can only** have permit rules, **can NOT** have deny rules
     - Implicitly deny rule at the end
@@ -1675,7 +1677,7 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
             - Create a security group and apply it to those instances, and configure a rule that allows communication on
                 all protocols/ports, the source of which is the subnet CIDR block                          
 - **_Network Access Control Lists(N. ACLs)_** 
-    - N.ACL works at the subnet level
+    - **N.ACL works at the subnet level**
     - A function performed on the implied router(implied VPC hosts the Network ACL function)
     - N.ACL are Stateless. Outbound traffic for an allowed inbound traffic, must be "explicitly" allowed too
     - N.ACL can have "permit" and "deny" rules
@@ -1704,9 +1706,14 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
             - Inbound for security group means inbound from outside the instance destined to the instance. Outbound means
                 going out of the instance's ENI                                 
 - **_Virtual Private gateway_**
+    - Imagine if you want to connect your VPC to your company HQ, so that my employees can connect to the servers hosted
+        in the VPC, you have to have a virtual private gateway created and attached to your VPC.
+        Like Internet gateway which will take the traffic to the outside world through the internet, the VPG will take
+        the traffic to your Hq, or premises or branches through either VPN or a direct connection 
+    
 
 [Back to Table of Contents](#toc)
-
+<a name = "ip_v6"></a>
 ## IPv6 Addressing
 - All IPv6 addresses are Public
 - Hence, AWS allocates the IPv6 address range if you require that
