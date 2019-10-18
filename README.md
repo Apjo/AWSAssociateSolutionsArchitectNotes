@@ -1,7 +1,9 @@
 # AWS Associate Solutions Architect Notes
-These are the notes I have prepared while doing the online course for `AWS Associate Solutions Architect` on Udemy(2015-2017) 
+These are the notes I have prepared while doing the online course for `AWS Associate Solutions Architect` 
 
-The course is taught by [Ryan Kroonenburg](https://www.udemy.com/user/ryankroonenburg/).
+One of the course is taught by [Ryan Kroonenburg](https://www.udemy.com/user/ryankroonenburg/),
+and the one that I am biased towards and is much better than the Acloud one is [this](https://www.udemy.com/aws-certified-solutions-architect-associate-exam/)
+taught by Eissa. 
 
 # What do I need for this course:
 - AWS account Free tier
@@ -25,7 +27,6 @@ Following are the sequence of events:
     9.  2016, Run rate of $13 billion
 
 ### AWS Solutions Architect-Introduction:
-- forums: forums.acloud.guru
 - Exam blueprint 
 [Example exam blueprint](http://awstrainingandcertification.s3.Amazonaws.com/production/AWS_certified_solutions_architect_associate_blueprint.pdf)
 
