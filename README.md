@@ -1,30 +1,11 @@
 # AWS Associate Solutions Architect Notes
-These are the notes I have prepared while doing the online course for `AWS Associate Solutions Architect` 
 
-One of the course is taught by [Ryan Kroonenburg](https://www.udemy.com/user/ryankroonenburg/),
-and the one that I am biased towards and is much better than the Acloud one is [this](https://www.udemy.com/aws-certified-solutions-architect-associate-exam/)
-taught by Eissa. 
+Notes prepared while doing the online course on AWS Associate Solutions Architect.
 
-# What do I need for this course:
-- AWS account Free tier
-- Domain name(optional)
-- A Laptop with internet connection
-
-# History of AWS:
-It all started with **Chris Pinkman** and **Benjamin Black** presenting a paper on Amazon’s internal infrastructure, 
-and requested the CEO to sell it as a service, while preparing a business case
-
-Following are the sequence of events:
-
-    1.  2004, SQS launched
-    2.  2006, AWS launched officially
-    3.  2007, More than 180k dev moved or started using AWS
-    4.  2010, All of Amazon moved to the AWS platform
-    5.  2012, First re:invent
-    6.  2013, Certifications
-    7.  2014, Committed to achieve 100% renewable energy usage
-    8.  2015, Revenue hits a new high of USD $6 billion per year
-    9.  2016, Run rate of $13 billion
+I have not taken the exam, but I am planning to, some time in the future :)
+ 
+These notes are a mixture of notes from a course taught by [Ryan Kroonenburg](https://www.udemy.com/user/ryankroonenburg/),
+and one taught by [Eissa](https://www.udemy.com/aws-certified-solutions-architect-associate-exam/) 
 
 ### AWS Solutions Architect-Introduction:
 - Exam blueprint 
@@ -111,15 +92,17 @@ Following are the sequence of events:
 # Concepts and Components:
 
    1.   **AWS Global Infrastructure**:
-   
-        1. Regions: A place where AWS resources exists a geographical area, there are 15 regions (as of 2015).
-            Each region consists of multiple availability zones, currently 49 in total(as of 2017).
-            An Availability Zone(AZ) is simply a data center.
+        1. Availability zone: Each AWS region consists of multiple AZs
+            Each region consists of multiple availability zones, currently 69 in total(as of 2019)
+            An Availability Zone(AZ) is simply a data center
+            Each AZ can contain multiple data centers
+                        
+        2. Regions: A place where AWS resources exists a geographical area, there are 22 regions (as of 2019)
         
-        2. Edge location: This is a CDN(Content-Delivery Network) endpoint. Edge locations are used by CloudFront 
+        3. Edge location: This is a CDN(Content-Delivery Network) endpoint. Edge locations are used by CloudFront 
             to cache files near the user where they access them.
         
-        3. CDN: A content delivery network (CDN) is a system of distributed servers that deliver webpages,
+        4. CDN: A content delivery network (CDN) is a system of distributed servers that deliver webpages,
             and other web content to a user based on the geographic locations of the user,
             the origin of the webpage and a content delivery server.
         
@@ -257,7 +240,7 @@ Following are the sequence of events:
                 convert or transcode media files from their source formats to version that will play on devices like
                 smartphones, tablets etc.
     
-   10.	**Deployment and Management**:
+   10.	**Deployment and Management or Monitoring & Logging**:
 
         1. CloudWatch: 
             - A monitoring service for AWS Cloud resources and the apps you run on AWS
@@ -333,10 +316,6 @@ Following are the sequence of events:
             - Along with high-deliverability SES provides, easy, real-time access to your sending statistics, 
                 and built-in notifications for bounces, complaints, and deliveries to help you find tune your 
                 cloud-based email sending strategy
-                                 
-   After AWS resources are deployed we can update or modify in a controlled manner,
-   and predictable way in effect applying version control to your AWS infrastructure.
-   **Amazon Web Services offer 3 different levels of support, namely Enterprise Business, and Developer**
    
 [Back to Table of Contents](#toc)
 
@@ -362,12 +341,10 @@ Allows us to manage users and their level of access to the AWS console.
 - Authentication 
 - Authorization
 - Actions
-- Resources: entity thats exists within a service
+- Resources: entity that exists within a service
 
 **High Level Concept**:
-- Access IAM via:
-    - AWS Console
-    - Programmatic access through SDKs, HTTPS API, and CLI(require Access Key and Secret)
+- Access IAM via AWS Console or through SDKs, HTTPS API, and CLI(require Access Key and Secret)
 - User: An end user
 - Group: A collection of users under one set of permissions, makes it easier to manage permissions for users. 300 groups
     can be created at any given time, nesting of groups is not allowed. A user can be a member of upto 10 groups
@@ -951,11 +928,18 @@ Ans: [bucket_name].[s3-website-][valid-aws-region][.aws.amazon.com]
 # EC2(Elastic Compute Cloud)
 
 - Provides resizable compute capacity in the cloud. 
+- You have root access to the EC2 instances, be able to restart, terminate, reboot.
+    You need to have a key & key pair to access the instance
 - Reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity,
   both up and down, as computing requirements change.
 - only pay for the capacity you actually use
-- provides developers the tools to build failure resilient apps and isloate from common failure scenarios
-  
+- provides developers the tools to build failure resilient apps and isolate from common failure scenarios
+- 20 instances soft limit per account
+- 2 types of block store devices namely `Elastic Block store` which are persistent and Network attached virtual drives,
+    these are not directly connected to the host where the instance is but are attached to the network, where as
+    `Instance-store` are not persistent(ephemeral), basically a virtual hard drive on the host allocated to this EC2 instance
+- So, EBS-backed EC2 instance has a EBS root volume, and Instance-store backed EC2 instance has instance-store root volume
+
 <a name ="ec2_options"></a>
 **EC2 options**:
 - **_On demand_**: 
