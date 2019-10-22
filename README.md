@@ -1,15 +1,13 @@
 # AWS Associate Solutions Architect Notes
 
 Notes prepared while doing the online course on AWS Associate Solutions Architect.
-
-I have not taken the exam, but I am planning to, some time in the future :)
  
 These notes are a mixture of notes from a course taught by [Ryan Kroonenburg](https://www.udemy.com/user/ryankroonenburg/),
 and one taught by [Eissa](https://www.udemy.com/aws-certified-solutions-architect-associate-exam/) 
 
 ### AWS Solutions Architect-Introduction:
-- Exam blueprint 
-[Example exam blueprint](http://awstrainingandcertification.s3.Amazonaws.com/production/AWS_certified_solutions_architect_associate_blueprint.pdf)
+- [Example exam blueprint](https://d1.awsstatic.com/training-and-certification/docs-sa-assoc/AWS%20Certified%20Solutions%20Architect%20-%20Associate%20Exam%20Guide_v1.1_2019_08_27_FINAL.pdf)
+- [March 2020 Updated version](https://d1.awsstatic.com/training-and-certification/docs-sa-assoc/AWS%20Certified%20Solutions%20Architect%20-%20Associate%20Exam%20Guide_v1.1_2019_08_27_FINAL.pdf)
 
 <a name ="toc"></a>
 ### Table of Contents
@@ -1627,11 +1625,13 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
     - The route tables will also have entries to external destinations  
 - **_Route tables_**
     - You can have up to 200 route tables per VPC
-    - You can have up to 50 routes entries per route table
-    - **Each subnet MUST be associated with only 1 route table** at any given time. **1 route table can be assigned to multiple
-        subnets**, but 1 subnet cannot be attached to more than 1 route table at any given time
+    - In each route table you can have up to 50 routes entries
+    - **Each subnet MUST be associated with only 1 route table** at any given time. 
+        **1 route table can be assigned to multiple subnets**, but
+        **1 subnet cannot be attached to more than 1 route table**
     - If you do not specify a subnet-to-route-table association, the subnet will be associated with the default(main)
         VPC route table
+    - **Main route table is created by default** for your VPC by AWS
     - You can also edit the main(default) route table, but you cannot delete the main(default) route table, however you
         can make a custom route table manually become the main route table, then you can delete the former main, as it
         is no longer a main route table
@@ -1714,23 +1714,29 @@ Take a snapshot, the snapshot excludes data held in the cache by apps and the OS
 
 [Back to Table of Contents](#toc)
 <a name = "ip_v6"></a>
-## IPv6 Addressing
+## VPC IP Addressing
 - All IPv6 addresses are Public
 - Hence, AWS allocates the IPv6 address range if you require that
-- Once the VPC is created, you can NOT change its CIDR block range
+- Once the VPC is created, **you can NOT change its CIDR block range**  
+- Always think about the future when you are deciding the CIDR block
+- The CIDR block range can be /28 or /16, in ipv4 addresses which is 32 bit long, for /28, the first 28 bits will be reserved
+    for subnets and last 4 bits will be for ec2 instances, i.e. you can have upto 16(2^4) ip addresses assigned
+    Thus the minimum size of a CIDR block you can have in a VPC on AWS is /28. The 16 bits is too big, it gives you 2 ^16
 - If you need a different CIDR size, create a new VPC
-- The different subnets within a VPC can NOT overlap
+- The different subnets within a VPC can NOT overlap, you can however, expand your VPC CIDR by adding new/extra IP addreses
+    ranges
 
 [Back to Table of Contents](#toc)
 
 ## AWS Reserved IP's in each subnet
 - First 4 IP addresses in each subnet and the last one are reserved by AWS
-    - for example: if the subnet is 10.0.0.0/24
+    - for example: if the subnet is 10.0.0.0/24, the ip addresses you cannot use are
     - 10.0.0.0 is the base network
     - 10.0.0.1 VPC router
     - 10.0.0.2 DNS related
     - 10.0.0.3 Reserved for future use
     - 10.0.0.255 last IP
+    
 [Back to Table of Contents](#toc)
 
 <a name ="nat_instances"></a>
@@ -2138,18 +2144,6 @@ You will need atleast 2 public subnets to deploy ALB's
     You can group resources that share one or more tags
 - Contain information such as: region, name, HealthChecks
 - Also contain specific information for eg. for EC2 - public and private ip addresses, for ELB - port configurations 
-
-[Back to Table of Contents](#toc)
-
-<a name ="vpc_peering"></a>
-# VPC Peering
-- A simple connection between 2 VPCs that enables us to route traffic between them using private IPs
-- You can create a connection within your vpcs, or with a VPC in another AWS account within a **single region**
-- AWS uses existing VPC infrastructure to create a VPC peering, does not rely on gateway, or a VPN connection or on a 
-    separate piece of hardware
-- No single point of failure for communication or a bandwidth bottleneck
-- Transitive peering relationship not supported
-- Cannot create a VPC peering connection between VPCs that have matching or overlapping CIDR blocks
 
 [Back to Table of Contents](#toc)
     
